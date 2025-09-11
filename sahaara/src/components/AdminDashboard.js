@@ -7,6 +7,13 @@ import {
   Calendar,
   TrendingUp,
   AlertTriangle,
+  Sparkles,
+  Heart,
+  Shield,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  Star,
 } from "lucide-react";
 import {
   LineChart,
@@ -30,128 +37,206 @@ const AdminDashboard = () => {
   const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate("/")}
-              className="flex items-center text-gray-600 hover:text-gray-900"
+              className="group flex items-center text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg px-4 py-2"
             >
-              <ArrowLeft className="h-5 w-5 mr-2" />
+              <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Login
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Admin Dashboard
-            </h1>
-            <div className="text-sm text-gray-600">System Administrator</div>
+            <div className="text-center">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                Admin Dashboard
+              </h1>
+              <div className="flex items-center justify-center space-x-2 mt-2">
+                <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
+                <p className="text-gray-600 font-medium">
+                  System Administrator
+                </p>
+              </div>
+            </div>
+            <div className="w-24"></div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="relative max-w-7xl mx-auto px-4 py-8">
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up">
             <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Users className="h-6 w-6 text-blue-600" />
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Users className="h-8 w-8 text-white" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Users</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="ml-6">
+                <p className="text-sm font-semibold text-gray-600 mb-1">
+                  Total Users
+                </p>
+                <p className="text-3xl font-bold text-gray-900">
                   {analyticsData.monthlyStats.totalUsers.toLocaleString()}
                 </p>
+                <div className="flex items-center mt-1">
+                  <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+                  <span className="text-sm text-green-600 font-medium">
+                    +12%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div
+            className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up"
+            style={{ animationDelay: "100ms" }}
+          >
             <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Users className="h-6 w-6 text-green-600" />
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Users className="h-8 w-8 text-white" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">
+              <div className="ml-6">
+                <p className="text-sm font-semibold text-gray-600 mb-1">
                   Active Users
                 </p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-gray-900">
                   {analyticsData.monthlyStats.activeUsers.toLocaleString()}
                 </p>
+                <div className="flex items-center mt-1">
+                  <Clock className="h-4 w-4 text-blue-500 mr-1" />
+                  <span className="text-sm text-blue-600 font-medium">
+                    Live
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div
+            className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up"
+            style={{ animationDelay: "200ms" }}
+          >
             <div className="flex items-center">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <MessageCircle className="h-6 w-6 text-purple-600" />
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MessageCircle className="h-8 w-8 text-white" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">
+              <div className="ml-6">
+                <p className="text-sm font-semibold text-gray-600 mb-1">
                   Sessions Completed
                 </p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-gray-900">
                   {analyticsData.monthlyStats.sessionsCompleted.toLocaleString()}
                 </p>
+                <div className="flex items-center mt-1">
+                  <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
+                  <span className="text-sm text-green-600 font-medium">
+                    This month
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div
+            className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up"
+            style={{ animationDelay: "300ms" }}
+          >
             <div className="flex items-center">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Calendar className="h-6 w-6 text-orange-600" />
+              <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Calendar className="h-8 w-8 text-white" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">
+              <div className="ml-6">
+                <p className="text-sm font-semibold text-gray-600 mb-1">
                   Appointments Booked
                 </p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-3xl font-bold text-gray-900">
                   {analyticsData.monthlyStats.appointmentsBooked}
                 </p>
+                <div className="flex items-center mt-1">
+                  <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                  <span className="text-sm text-yellow-600 font-medium">
+                    Success
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Monthly Trends */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Monthly Usage Trends
-            </h3>
+          <div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up"
+            style={{ animationDelay: "400ms" }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Monthly Usage Trends
+              </h3>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                <span className="text-sm text-gray-600">Users</span>
+                <div className="w-3 h-3 bg-green-500 rounded-full ml-4"></div>
+                <span className="text-sm text-gray-600">Sessions</span>
+              </div>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={analyticsData.monthlyTrends}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                <XAxis dataKey="month" stroke="#6B7280" />
+                <YAxis stroke="#6B7280" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
                 <Line
                   type="monotone"
                   dataKey="users"
                   stroke="#3B82F6"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   name="Users"
+                  dot={{ fill: "#3B82F6", strokeWidth: 2, r: 6 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="sessions"
                   stroke="#10B981"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   name="Sessions"
+                  dot={{ fill: "#10B981", strokeWidth: 2, r: 6 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
           {/* Common Issues */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Common Mental Health Issues
-            </h3>
+          <div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up"
+            style={{ animationDelay: "500ms" }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Common Mental Health Issues
+              </h3>
+              <div className="text-sm text-gray-600">
+                Distribution by Category
+              </div>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -160,7 +245,7 @@ const AdminDashboard = () => {
                   cy="50%"
                   labelLine={false}
                   label={({ issue, percentage }) => `${issue}: ${percentage}%`}
-                  outerRadius={80}
+                  outerRadius={100}
                   fill="#8884d8"
                   dataKey="percentage"
                 >
@@ -171,80 +256,122 @@ const AdminDashboard = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Detailed Analytics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Issue Distribution Bar Chart */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Issue Distribution
-            </h3>
+          <div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up"
+            style={{ animationDelay: "600ms" }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Issue Distribution
+              </h3>
+              <div className="text-sm text-gray-600">Student Reports</div>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={analyticsData.commonIssues}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="issue" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="percentage" fill="#3B82F6" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                <XAxis dataKey="issue" stroke="#6B7280" />
+                <YAxis stroke="#6B7280" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    border: "none",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
+                <Bar
+                  dataKey="percentage"
+                  fill="url(#colorGradient)"
+                  radius={[4, 4, 0, 0]}
+                />
+                <defs>
+                  <linearGradient
+                    id="colorGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#3B82F6" />
+                    <stop offset="95%" stopColor="#1D4ED8" />
+                  </linearGradient>
+                </defs>
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* System Health */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              System Health
-            </h3>
+          <div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up"
+            style={{ animationDelay: "700ms" }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                System Health
+              </h3>
+              <div className="text-sm text-gray-600">Live Status</div>
+            </div>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="group flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300">
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-900">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></div>
+                  <span className="text-sm font-semibold text-gray-900">
                     Server Status
                   </span>
                 </div>
-                <span className="text-sm text-green-600 font-medium">
+                <span className="text-sm text-green-600 font-semibold">
                   Operational
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="group flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300">
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-900">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></div>
+                  <span className="text-sm font-semibold text-gray-900">
                     Database
                   </span>
                 </div>
-                <span className="text-sm text-green-600 font-medium">
+                <span className="text-sm text-green-600 font-semibold">
                   Connected
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+              <div className="group flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl hover:from-yellow-100 hover:to-orange-100 transition-all duration-300">
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-900">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></div>
+                  <span className="text-sm font-semibold text-gray-900">
                     AI Chatbot
                   </span>
                 </div>
-                <span className="text-sm text-yellow-600 font-medium">
+                <span className="text-sm text-yellow-600 font-semibold">
                   High Load
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="group flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300">
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-gray-900">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-3 group-hover:scale-125 transition-transform"></div>
+                  <span className="text-sm font-semibold text-gray-900">
                     Counsellor Portal
                   </span>
                 </div>
-                <span className="text-sm text-green-600 font-medium">
+                <span className="text-sm text-green-600 font-semibold">
                   Active
                 </span>
               </div>
@@ -338,4 +465,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-

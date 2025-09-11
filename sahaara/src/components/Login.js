@@ -1,27 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { colleges } from "../data/mockData";
-import { Heart, Users, Shield } from "lucide-react";
+import {
+  Heart,
+  Users,
+  Shield,
+  Sparkles,
+  ArrowRight,
+  CheckCircle,
+} from "lucide-react";
 
 const Login = () => {
   const [selectedCollege, setSelectedCollege] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = useState("student");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    // Simulate loading
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     // Mock login - any credentials work for demo
     if (selectedCollege && username && password) {
-      if (loginType === "counsellor") {
-        navigate("/counsellor");
-      } else if (loginType === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
+      setShowSuccess(true);
+      setTimeout(() => {
+        if (loginType === "counsellor") {
+          navigate("/counsellor");
+        } else if (loginType === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/dashboard");
+        }
+      }, 1000);
     }
+    setIsLoading(false);
   };
 
   const handleGuestAccess = () => {
@@ -29,164 +47,216 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="flex justify-center items-center mb-4">
-            <Heart className="h-12 w-12 text-primary-600" />
-            <h1 className="ml-3 text-4xl font-bold text-gray-900">Sahaara</h1>
-          </div>
-          <p className="text-gray-600 text-lg">
-            Digital Mental Health Support for Students
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
+      </div>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="mb-6">
-            <div className="flex space-x-1 mb-4">
-              <button
-                onClick={() => setLoginType("student")}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                  loginType === "student"
-                    ? "bg-primary-600 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                Student
-              </button>
-              <button
-                onClick={() => setLoginType("counsellor")}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                  loginType === "counsellor"
-                    ? "bg-primary-600 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                Counsellor
-              </button>
-              <button
-                onClick={() => setLoginType("admin")}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-                  loginType === "admin"
-                    ? "bg-primary-600 text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                Admin
-              </button>
+      <div className="relative flex items-center justify-center min-h-screen p-4">
+        <div className="max-w-md w-full space-y-8 animate-fade-in-up">
+          {/* Header */}
+          <div className="text-center">
+            <div className="flex justify-center items-center mb-6">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30"></div>
+                <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl">
+                  <Heart className="h-12 w-12 text-white animate-pulse" />
+                </div>
+              </div>
+              <div className="ml-4">
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                  Sahaara
+                </h1>
+                <div className="flex items-center justify-center space-x-2 mt-2">
+                  <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
+                  <p className="text-gray-600 text-sm font-medium">
+                    Mental Health Support Platform
+                  </p>
+                </div>
+              </div>
             </div>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              Your journey to better mental health starts here
+            </p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            {loginType === "student" && (
-              <div>
+          {/* Login Form */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500">
+            <div className="mb-8">
+              <div className="flex space-x-1 mb-6 bg-gray-100 rounded-2xl p-1">
+                <button
+                  onClick={() => setLoginType("student")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                    loginType === "student"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                  }`}
+                >
+                  Student
+                </button>
+                <button
+                  onClick={() => setLoginType("counsellor")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                    loginType === "counsellor"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                  }`}
+                >
+                  Counsellor
+                </button>
+                <button
+                  onClick={() => setLoginType("admin")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                    loginType === "admin"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                  }`}
+                >
+                  Admin
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              {loginType === "student" && (
+                <div className="animate-fade-in-up">
+                  <label
+                    htmlFor="college"
+                    className="block text-sm font-semibold text-gray-700 mb-3"
+                  >
+                    Select Your College
+                  </label>
+                  <select
+                    id="college"
+                    value={selectedCollege}
+                    onChange={(e) => setSelectedCollege(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                    required
+                  >
+                    <option value="">Choose your college</option>
+                    {colleges.map((college) => (
+                      <option key={college.id} value={college.name}>
+                        {college.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="animate-fade-in-up delay-100">
                 <label
-                  htmlFor="college"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  htmlFor="username"
+                  className="block text-sm font-semibold text-gray-700 mb-3"
                 >
-                  Select Your College
+                  {loginType === "student" ? "Student ID" : "Username"}
                 </label>
-                <select
-                  id="college"
-                  value={selectedCollege}
-                  onChange={(e) => setSelectedCollege(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                  placeholder={
+                    loginType === "student"
+                      ? "Enter your student ID"
+                      : "Enter username"
+                  }
                   required
+                />
+              </div>
+
+              <div className="animate-fade-in-up delay-200">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-semibold text-gray-700 mb-3"
                 >
-                  <option value="">Choose your college</option>
-                  {colleges.map((college) => (
-                    <option key={college.id} value={college.name}>
-                      {college.name}
-                    </option>
-                  ))}
-                </select>
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Signing in...
+                  </>
+                ) : showSuccess ? (
+                  <>
+                    <CheckCircle className="h-5 w-5 mr-2" />
+                    Success! Redirecting...
+                  </>
+                ) : (
+                  <>
+                    {loginType === "student"
+                      ? "Login as Student"
+                      : loginType === "counsellor"
+                      ? "Login as Counsellor"
+                      : "Login as Admin"}
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Guest Access */}
+            {loginType === "student" && (
+              <div className="mt-8 pt-6 border-t border-gray-200 animate-fade-in-up delay-300">
+                <p className="text-center text-sm text-gray-600 mb-4">
+                  Want to try without logging in?
+                </p>
+                <button
+                  onClick={handleGuestAccess}
+                  className="w-full bg-white/70 text-gray-700 py-3 px-4 rounded-xl hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center"
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Access Chat Buddy (Guest Mode)
+                </button>
               </div>
             )}
+          </div>
 
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                {loginType === "student" ? "Student ID" : "Username"}
-              </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder={
-                  loginType === "student"
-                    ? "Enter your student ID"
-                    : "Enter username"
-                }
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="Enter password"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors font-medium"
-            >
-              {loginType === "student"
-                ? "Login as Student"
-                : loginType === "counsellor"
-                ? "Login as Counsellor"
-                : "Login as Admin"}
-            </button>
-          </form>
-
-          {/* Guest Access */}
-          {loginType === "student" && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-center text-sm text-gray-600 mb-3">
-                Want to try without logging in?
+          {/* Features Preview */}
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-3 bg-blue-100 rounded-xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform">
+                <Heart className="h-8 w-8 text-blue-600" />
+              </div>
+              <p className="text-sm font-semibold text-gray-700">
+                Mental Health Support
               </p>
-              <button
-                onClick={handleGuestAccess}
-                className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors font-medium"
-              >
-                <Users className="inline h-4 w-4 mr-2" />
-                Access Chat Buddy (Guest Mode)
-              </button>
             </div>
-          )}
-        </div>
-
-        {/* Features Preview */}
-        <div className="grid grid-cols-3 gap-4 mt-8">
-          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-            <Heart className="h-8 w-8 text-primary-600 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">Mental Health Support</p>
-          </div>
-          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-            <Users className="h-8 w-8 text-primary-600 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">Peer Support</p>
-          </div>
-          <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-            <Shield className="h-8 w-8 text-primary-600 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">Safe & Anonymous</p>
+            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-3 bg-green-100 rounded-xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform">
+                <Users className="h-8 w-8 text-green-600" />
+              </div>
+              <p className="text-sm font-semibold text-gray-700">
+                Peer Support
+              </p>
+            </div>
+            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-3 bg-purple-100 rounded-xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform">
+                <Shield className="h-8 w-8 text-purple-600" />
+              </div>
+              <p className="text-sm font-semibold text-gray-700">
+                Safe & Anonymous
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -195,4 +265,3 @@ const Login = () => {
 };
 
 export default Login;
-

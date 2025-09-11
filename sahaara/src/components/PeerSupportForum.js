@@ -9,6 +9,11 @@ import {
   Reply,
   Plus,
   Search,
+  Sparkles,
+  Clock,
+  ArrowRight,
+  Shield,
+  CheckCircle,
 } from "lucide-react";
 import { forumPosts } from "../data/mockData";
 
@@ -52,37 +57,49 @@ const PeerSupportForum = () => {
 
   if (selectedPost) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        {/* Animated Background Elements */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        </div>
+
         {/* Header */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-4xl mx-auto px-4 py-4">
+        <div className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
+          <div className="max-w-4xl mx-auto px-4 py-6">
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setSelectedPost(null)}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                className="group flex items-center text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg px-4 py-2"
               >
-                <ArrowLeft className="h-5 w-5 mr-2" />
+                <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
                 Back to Forum
               </button>
-              <h1 className="text-xl font-bold text-gray-900">
-                {selectedPost.title}
-              </h1>
-              <div className="text-sm text-gray-600">
-                {selectedPost.timestamp}
+              <div className="text-center">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {selectedPost.title}
+                </h1>
+                <div className="flex items-center justify-center space-x-2 mt-1">
+                  <Clock className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">
+                    {selectedPost.timestamp}
+                  </span>
+                </div>
               </div>
+              <div className="w-24"></div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <div className="flex items-start justify-between mb-4">
+        <div className="relative max-w-4xl mx-auto px-4 py-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 mb-8 border border-white/20 animate-fade-in-up">
+            <div className="flex items-start justify-between mb-6">
               <div className="flex items-center">
-                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <Users className="h-5 w-5 text-primary-600" />
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4">
+                  <Users className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-lg font-bold text-gray-900">
                     {selectedPost.author}
                   </p>
                   <p className="text-sm text-gray-500">
@@ -91,39 +108,47 @@ const PeerSupportForum = () => {
                 </div>
               </div>
               {selectedPost.reported && (
-                <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                <span className="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full font-medium">
                   Reported
                 </span>
               )}
             </div>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed text-lg">
               {selectedPost.content}
             </p>
           </div>
 
           {/* Replies */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Replies ({selectedPost.replies})
-            </h3>
+          <div className="space-y-6">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Replies ({selectedPost.replies})
+              </h3>
+              <p className="text-gray-600">Share your thoughts and support</p>
+            </div>
 
             {/* Mock replies */}
-            {[1, 2, 3].map((replyId) => (
-              <div key={replyId} className="bg-white rounded-lg shadow p-4">
+            {[1, 2, 3].map((replyId, index) => (
+              <div
+                key={replyId}
+                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20 animate-fade-in-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex items-start">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-                    <Users className="h-4 w-4 text-gray-600" />
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mr-4">
+                    <Users className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center mb-2">
-                      <p className="font-medium text-gray-900 mr-2">
+                    <div className="flex items-center mb-3">
+                      <p className="font-bold text-gray-900 mr-3">
                         Anonymous Student
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Clock className="h-4 w-4 mr-1" />
                         {replyId} hours ago
-                      </p>
+                      </div>
                     </div>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 leading-relaxed">
                       This is a sample reply to demonstrate the forum
                       functionality. In a real application, these would be
                       actual user responses.
@@ -134,20 +159,24 @@ const PeerSupportForum = () => {
             ))}
 
             {/* Reply Form */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h4 className="font-medium text-gray-900 mb-4">Add a Reply</h4>
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
+              <h4 className="text-xl font-bold text-gray-900 mb-6">
+                Add a Reply
+              </h4>
               <textarea
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 mb-4"
+                rows={6}
+                className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 text-lg"
                 placeholder="Share your thoughts and support..."
               ></textarea>
-              <button
-                onClick={() => handleReply(selectedPost.id)}
-                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
-              >
-                <Reply className="h-4 w-4 mr-2" />
-                Post Reply
-              </button>
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={() => handleReply(selectedPost.id)}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold flex items-center shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                >
+                  <Reply className="h-5 w-5 mr-2" />
+                  Post Reply
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -156,57 +185,73 @@ const PeerSupportForum = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate("/dashboard")}
-              className="flex items-center text-gray-600 hover:text-gray-900"
+              className="group flex items-center text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg px-4 py-2"
             >
-              <ArrowLeft className="h-5 w-5 mr-2" />
+              <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Dashboard
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Peer Support Forum
-            </h1>
-            <div className="text-sm text-gray-600">Community Support</div>
+            <div className="text-center">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                Peer Support Forum
+              </h1>
+              <div className="flex items-center justify-center space-x-2 mt-2">
+                <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
+                <p className="text-gray-600 font-medium">Community Support</p>
+              </div>
+            </div>
+            <div className="w-24"></div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="relative max-w-7xl mx-auto px-4 py-8">
         {/* Search and New Post */}
-        <div className="mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
+        <div className="mb-12">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up">
+            <div className="flex flex-col lg:flex-row gap-6 mb-8">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Search discussions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 text-lg"
                   />
                 </div>
               </div>
               <button
                 onClick={() => setShowNewPost(true)}
-                className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold text-lg flex items-center shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-5 w-5 mr-2" />
                 New Post
               </button>
             </div>
 
-            <div className="text-sm text-gray-600">
-              <p>
-                💡 <strong>Remember:</strong> This is a safe space. Be kind,
-                respectful, and supportive to fellow students.
-              </p>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-6 w-6 text-blue-600" />
+                <p className="text-gray-700 font-medium">
+                  <strong>Remember:</strong> This is a safe space. Be kind,
+                  respectful, and supportive to fellow students.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -270,27 +315,33 @@ const PeerSupportForum = () => {
         )}
 
         {/* Forum Posts */}
-        <div className="space-y-6">
-          {filteredPosts.map((post) => (
+        <div className="space-y-8">
+          {filteredPosts.map((post, index) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+              className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 hover:scale-105 border border-white/20 animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms` }}
               onClick={() => setSelectedPost(post)}
             >
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-4">
+              <div className="p-8">
+                <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                      <Users className="h-5 w-5 text-primary-600" />
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                      <Users className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{post.author}</p>
-                      <p className="text-sm text-gray-500">{post.timestamp}</p>
+                      <p className="text-lg font-bold text-gray-900">
+                        {post.author}
+                      </p>
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {post.timestamp}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     {post.reported && (
-                      <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                      <span className="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full font-medium">
                         Reported
                       </span>
                     )}
@@ -299,38 +350,38 @@ const PeerSupportForum = () => {
                         e.stopPropagation();
                         handleReport(post.id);
                       }}
-                      className="text-gray-400 hover:text-red-600 transition-colors"
+                      className="text-gray-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
                     >
-                      <Flag className="h-4 w-4" />
+                      <Flag className="h-5 w-5" />
                     </button>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors">
                   {post.title}
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-2">
+                <p className="text-gray-600 mb-6 line-clamp-2 text-lg leading-relaxed">
                   {post.content}
                 </p>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-6">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleReply(post.id);
                       }}
-                      className="flex items-center text-gray-600 hover:text-primary-600 transition-colors"
+                      className="flex items-center text-gray-600 hover:text-blue-600 transition-colors font-medium group-hover:scale-105"
                     >
-                      <Reply className="h-4 w-4 mr-1" />
+                      <Reply className="h-5 w-5 mr-2" />
                       Reply ({post.replies})
                     </button>
-                    <button className="flex items-center text-gray-600 hover:text-red-600 transition-colors">
-                      <Heart className="h-4 w-4 mr-1" />
+                    <button className="flex items-center text-gray-600 hover:text-red-600 transition-colors font-medium group-hover:scale-105">
+                      <Heart className="h-5 w-5 mr-2" />
                       Support
                     </button>
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 font-medium">
                     {post.replies} replies
                   </div>
                 </div>
@@ -340,39 +391,79 @@ const PeerSupportForum = () => {
         </div>
 
         {filteredPosts.length === 0 && (
-          <div className="text-center py-12">
-            <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center py-16">
+            <div className="w-24 h-24 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <MessageCircle className="h-12 w-12 text-blue-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
               No discussions found
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-lg mb-6">
               Try adjusting your search or create a new post
             </p>
+            <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold">
+              Clear Search
+            </button>
           </div>
         )}
 
         {/* Community Guidelines */}
-        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">
-            Community Guidelines
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
-            <div>
-              <h4 className="font-medium mb-2">✅ Do:</h4>
-              <ul className="space-y-1">
-                <li>• Be kind and supportive</li>
-                <li>• Share your experiences</li>
-                <li>• Ask for help when needed</li>
-                <li>• Respect others' privacy</li>
+        <div className="mt-16 bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+              Community Guidelines
+            </h3>
+            <p className="text-gray-600 text-lg">
+              Help us maintain a safe and supportive environment
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6">
+              <h4 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+                <CheckCircle className="h-6 w-6 mr-2" />
+                Do:
+              </h4>
+              <ul className="space-y-3 text-green-800">
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Be kind and supportive
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Share your experiences
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Ask for help when needed
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  Respect others' privacy
+                </li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-medium mb-2">❌ Don't:</h4>
-              <ul className="space-y-1">
-                <li>• Share personal information</li>
-                <li>• Give medical advice</li>
-                <li>• Be judgmental or critical</li>
-                <li>• Spam or post irrelevant content</li>
+            <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-6">
+              <h4 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+                <Flag className="h-6 w-6 mr-2" />
+                Don't:
+              </h4>
+              <ul className="space-y-3 text-red-800">
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
+                  Share personal information
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
+                  Give medical advice
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
+                  Be judgmental or critical
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
+                  Spam or post irrelevant content
+                </li>
               </ul>
             </div>
           </div>
