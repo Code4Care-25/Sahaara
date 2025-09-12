@@ -4,7 +4,7 @@ export const colleges = [
   {
     id: 1,
     name: "New Horizon College of Engineering",
-    logo:"nhce-logo.png",
+    logo: "/logos/nhce-logo.png",
   },
   { id: 2, name: "Delhi University" },
   { id: 3, name: "Bangalore University" },

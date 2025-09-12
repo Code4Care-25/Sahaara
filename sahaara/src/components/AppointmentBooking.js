@@ -288,59 +288,74 @@ const AppointmentBooking = () => {
                   </button>
                 </div>
 
-                {/* Selected Appointment Summary */}
-                {selectedCounsellor && selectedSlot && (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 border border-white/20">
-                    <h3 className="text-lg font-bold text-gray-900 mb-3">
-                      Selected Appointment
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">
-                            {selectedCounsellor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </span>
+                {/* Selected Appointment Summary - Always Visible */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 border border-white/20">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">
+                    Selected Appointment
+                  </h3>
+                  <div className="space-y-3">
+                    {selectedCounsellor && selectedSlot ? (
+                      <>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">
+                              {selectedCounsellor.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </span>
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-gray-900 text-sm">
+                              {selectedCounsellor.name}
+                            </h4>
+                            <p className="text-gray-600 text-xs">
+                              {selectedCounsellor.specialization}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-bold text-gray-900 text-sm">
-                            {selectedCounsellor.name}
-                          </h4>
-                          <p className="text-gray-600 text-xs">
-                            {selectedCounsellor.specialization}
-                          </p>
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-gray-700">
+                              Date:
+                            </span>
+                            <span className="text-gray-900">
+                              {selectedSlot.date}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-sm mt-1">
+                            <span className="font-medium text-gray-700">
+                              Time:
+                            </span>
+                            <span className="text-gray-900">
+                              {selectedSlot.time}
+                            </span>
+                          </div>
                         </div>
+                        <button
+                          onClick={handleBookAppointment}
+                          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                        >
+                          Book Appointment
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </button>
+                      </>
+                    ) : (
+                      <div className="text-center py-6">
+                        <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                          <User className="h-8 w-8 text-gray-400" />
+                        </div>
+                        <h4 className="font-semibold text-gray-700 mb-2">
+                          No Selection Yet
+                        </h4>
+                        <p className="text-gray-500 text-sm">
+                          Select a counsellor and time slot from the list to
+                          book your appointment
+                        </p>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="font-medium text-gray-700">
-                            Date:
-                          </span>
-                          <span className="text-gray-900">
-                            {selectedSlot.date}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm mt-1">
-                          <span className="font-medium text-gray-700">
-                            Time:
-                          </span>
-                          <span className="text-gray-900">
-                            {selectedSlot.time}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleBookAppointment}
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
-                      >
-                        Book Appointment
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </button>
-                    </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
 

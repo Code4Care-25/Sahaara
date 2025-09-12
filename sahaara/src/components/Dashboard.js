@@ -320,14 +320,14 @@ const Dashboard = () => {
         </div>
 
         {/* Dashboard Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {dashboardCards.map((card, index) => {
             const IconComponent = card.icon;
             return (
               <div
                 key={card.id}
                 onClick={card.onClick}
-                className={`group relative bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 hover:scale-105 p-8 border border-white/20 animate-fade-in-up ${card.delay}`}
+                className={`group relative bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 hover:scale-105 p-6 border border-white/20 animate-fade-in-up ${card.delay}`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Card Background Gradient */}
@@ -336,23 +336,23 @@ const Dashboard = () => {
                 ></div>
 
                 <div className="relative">
-                  <div className="flex items-center mb-6">
+                  <div className="flex items-center mb-4">
                     <div
-                      className={`relative p-4 rounded-2xl ${card.bgColor} group-hover:scale-110 transition-transform duration-300`}
+                      className={`relative p-3 rounded-xl ${card.bgColor} group-hover:scale-110 transition-transform duration-300`}
                     >
                       <div
-                        className={`absolute inset-0 bg-gradient-to-br ${card.gradient} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
+                        className={`absolute inset-0 bg-gradient-to-br ${card.gradient} rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
                       ></div>
                       <IconComponent
-                        className={`h-8 w-8 ${card.iconColor} relative z-10`}
+                        className={`h-6 w-6 ${card.iconColor} relative z-10`}
                       />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 ml-6 group-hover:text-gray-800 transition-colors">
+                    <h3 className="text-lg font-bold text-gray-900 ml-4 group-hover:text-gray-800 transition-colors">
                       {card.title}
                     </h3>
                   </div>
 
-                  <p className="text-gray-600 text-lg leading-relaxed mb-6 group-hover:text-gray-700 transition-colors">
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4 group-hover:text-gray-700 transition-colors">
                     {card.description}
                   </p>
 
@@ -369,40 +369,6 @@ const Dashboard = () => {
               </div>
             );
           })}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20 animate-fade-in-up delay-1000">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">
-            Quick Actions
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {quickActions.map((action, index) => {
-              const IconComponent = action.icon;
-              return (
-                <div
-                  key={index}
-                  className="group p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer border border-transparent hover:border-gray-200"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className={`p-3 rounded-lg ${action.bgColor} group-hover:scale-110 transition-transform`}
-                    >
-                      <IconComponent className={`h-6 w-6 ${action.color}`} />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 group-hover:text-gray-800">
-                        {action.title}
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        {action.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </main>
 

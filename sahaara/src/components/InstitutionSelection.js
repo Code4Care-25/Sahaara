@@ -55,8 +55,8 @@ const InstitutionSelection = () => {
         <div className="text-center mb-6">
           <div className="flex justify-center items-center mb-3">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-30"></div>
-              <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30"></div>
+              <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl">
                 <Building2 className="h-8 w-8 text-white" />
               </div>
             </div>
@@ -72,9 +72,9 @@ const InstitutionSelection = () => {
               </div>
             </div>
           </div>
-          <p className="text-gray-600 text-sm max-w-xl mx-auto">
-            Select your institution to get started with your mental health
-            journey
+          <p className="text-gray-600 text-sm max-w-2xl mx-auto">
+            Welcome to Sahaara! Please select your institution to get started
+            with your mental health journey.
           </p>
         </div>
 
@@ -104,8 +104,8 @@ const InstitutionSelection = () => {
             />
           </div>
 
-          {/* Institution List - Compact Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+          {/* Institution List - Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-64 overflow-y-auto">
             {filteredColleges.length > 0 ? (
               filteredColleges.map((college) => (
                 <div
@@ -141,25 +141,26 @@ const InstitutionSelection = () => {
                         />
                       )}
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h3
-                        className={`text-sm font-medium ${
+                        className={`text-sm font-medium truncate ${
                           selectedInstitution === college.name
                             ? "text-blue-800"
                             : "text-gray-800"
                         }`}
+                        title={college.name}
                       >
                         {college.name}
                       </h3>
                     </div>
                     {selectedInstitution === college.name && (
-                      <CheckCircle className="h-4 w-4 text-blue-600" />
+                      <CheckCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                     )}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="col-span-2 text-center py-6">
+              <div className="col-span-full text-center py-6">
                 <Building2 className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500 text-sm">
                   No institutions found matching your search.
@@ -173,11 +174,11 @@ const InstitutionSelection = () => {
             <button
               onClick={handleContinue}
               disabled={!selectedInstitution || isLoading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2.5 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isLoading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                   Processing...
                 </>
               ) : (
@@ -196,9 +197,9 @@ const InstitutionSelection = () => {
             </p>
             <button
               onClick={() => navigate("/chat", { state: { isGuest: true } })}
-              className="w-full bg-white/70 text-gray-700 py-2 px-3 rounded-lg hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center text-sm"
+              className="w-full bg-white/70 text-gray-700 py-2 px-3 rounded-lg hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center text-xs"
             >
-              <Users className="h-4 w-4 mr-1" />
+              <Users className="h-3 w-3 mr-1" />
               Continue as Guest
             </button>
           </div>
