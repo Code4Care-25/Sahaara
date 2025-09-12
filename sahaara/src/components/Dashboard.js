@@ -303,17 +303,17 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Welcome Section */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center space-x-2 mb-4">
-            <Sparkles className="h-6 w-6 text-yellow-500 animate-pulse" />
+        <div className="mb-8 text-center">
+          <div className="inline-flex items-center space-x-2 mb-3">
+            <Sparkles className="h-5 w-5 text-yellow-500 animate-pulse" />
             <span className="text-sm font-medium text-gray-600 uppercase tracking-wide">
               Welcome Back
             </span>
           </div>
-          <h2 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-3 animate-fade-in">
             Ready to continue your journey?
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Your mental health matters. Let's explore the tools and resources
             designed to support your wellbeing.
           </p>

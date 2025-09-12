@@ -130,6 +130,16 @@ const InstitutionSelection = () => {
                           src={college.logo}
                           alt={`${college.name} logo`}
                           className="h-4 w-4 object-contain"
+                          onError={(e) => {
+                            console.log("Logo failed to load:", college.logo);
+                            e.target.style.display = "none";
+                          }}
+                          onLoad={() =>
+                            console.log(
+                              "Logo loaded successfully:",
+                              college.logo
+                            )
+                          }
                         />
                       ) : (
                         <Building2

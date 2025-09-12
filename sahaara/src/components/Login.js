@@ -192,13 +192,26 @@ const Login = () => {
                             <img
                               src={college.logo}
                               alt={`${selectedCollege} logo`}
-                              className="h-12 w-12 object-contain bg-white p-1 rounded-lg shadow-md border border-gray-200"
+                              className="h-20 w-20 object-contain bg-white p-2 rounded-lg shadow-md border border-gray-200"
+                              onError={(e) => {
+                                console.log(
+                                  "Logo failed to load:",
+                                  college.logo
+                                );
+                                e.target.style.display = "none";
+                              }}
+                              onLoad={() =>
+                                console.log(
+                                  "Logo loaded successfully:",
+                                  college.logo
+                                )
+                              }
                             />
                           </div>
                         ) : (
                           <div className="flex-shrink-0">
-                            <div className="h-12 w-12 bg-blue-100 rounded-lg shadow-md border border-gray-200 flex items-center justify-center">
-                              <Building2 className="h-6 w-6 text-blue-600" />
+                            <div className="h-20 w-20 bg-blue-100 rounded-lg shadow-md border border-gray-200 flex items-center justify-center">
+                              <Building2 className="h-10 w-10 text-blue-600" />
                             </div>
                           </div>
                         );
