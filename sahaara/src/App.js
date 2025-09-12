@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import InstitutionSelection from "./components/InstitutionSelection";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import CounsellorPage from "./components/CounsellorPage";
@@ -16,7 +17,8 @@ function App() {
     <Router>
       <div className="App min-h-screen bg-gray-50">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<InstitutionSelection />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/counsellor" element={<CounsellorPage />} />
           <Route path="/admin" element={<AdminDashboard />} />

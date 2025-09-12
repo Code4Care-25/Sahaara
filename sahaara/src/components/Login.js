@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { colleges } from "../data/mockData";
 import {
   Heart,
@@ -8,6 +8,8 @@ import {
   Sparkles,
   ArrowRight,
   CheckCircle,
+  ArrowLeft,
+  Building2,
 } from "lucide-react";
 
 const Login = () => {
@@ -18,6 +20,14 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get selected institution from navigation state
+  useEffect(() => {
+    if (location.state?.selectedInstitution) {
+      setSelectedCollege(location.state.selectedInstitution);
+    }
+  }, [location.state]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -64,6 +74,10 @@ const Login = () => {
     navigate("/chat", { state: { isGuest: true } });
   };
 
+  const handleBackToInstitutionSelection = () => {
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       {/* Animated Background Elements */}
@@ -77,6 +91,19 @@ const Login = () => {
         <div className="max-w-4xl w-full space-y-4 animate-fade-in-up">
           {/* Header */}
           <div className="text-center">
+            {/* Back Button */}
+            {location.state?.selectedInstitution && (
+              <div className="flex justify-start mb-4">
+                <button
+                  onClick={handleBackToInstitutionSelection}
+                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="text-sm font-medium">Back to Institution Selection</span>
+                </button>
+              </div>
+            )}
+            
             <div className="flex justify-center items-center mb-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30"></div>
@@ -168,27 +195,50 @@ const Login = () => {
 
             <form onSubmit={handleLogin} className="space-y-3">
               {loginType === "student" && (
-                <div className="animate-fade-in-up flex items-center space-x-3">
-                  <label
-                    htmlFor="college"
-                    className="w-40 text-sm font-semibold text-gray-700"
-                  >
-                    Select Your College
-                  </label>
-                  <select
-                    id="college"
-                    value={selectedCollege}
-                    onChange={(e) => setSelectedCollege(e.target.value)}
-                    className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
-                    required
-                  >
-                    <option value="">Choose your college</option>
-                    {colleges.map((college) => (
-                      <option key={college.id} value={college.name}>
-                        {college.name}
-                      </option>
-                    ))}
-                  </select>
+                <div className="animate-fade-in-up">
+                  {location.state?.selectedInstitution ? (
+                    // Show selected institution as read-only when coming from institution selection
+                    <div className="flex items-center space-x-3 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                      <Building2 className="h-5 w-5 text-blue-600" />
+                      <div className="flex-1">
+                        <label className="text-sm font-semibold text-blue-800">
+                          Selected Institution
+                        </label>
+                        <p className="text-blue-700 font-medium">{selectedCollege}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleBackToInstitutionSelection}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium underline"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  ) : (
+                    // Show dropdown when accessing login directly
+                    <div className="flex items-center space-x-3">
+                      <label
+                        htmlFor="college"
+                        className="w-40 text-sm font-semibold text-gray-700"
+                      >
+                        Select Your College
+                      </label>
+                      <select
+                        id="college"
+                        value={selectedCollege}
+                        onChange={(e) => setSelectedCollege(e.target.value)}
+                        className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                        required
+                      >
+                        <option value="">Choose your college</option>
+                        {colleges.map((college) => (
+                          <option key={college.id} value={college.name}>
+                            {college.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
               )}
 
