@@ -11,6 +11,39 @@ export const colleges = [
   { id: 8, name: "Ahmedabad University" },
 ];
 
+export const academicYears = [
+  { id: 1, name: "First Year", value: "1st" },
+  { id: 2, name: "Second Year", value: "2nd" },
+  { id: 3, name: "Third Year", value: "3rd" },
+  { id: 4, name: "Fourth Year", value: "4th" },
+  { id: 5, name: "Post Graduate", value: "PG" },
+  { id: 6, name: "PhD", value: "PhD" },
+];
+
+export const departments = [
+  { id: 1, name: "Artificial Intelligence and Machine Learning", code: "AIML" },
+  { id: 2, name: "Electronics & Communication", code: "ECE" },
+  { id: 3, name: "Mechanical Engineering", code: "ME" },
+  { id: 4, name: "Civil Engineering", code: "CE" },
+  { id: 5, name: "Electrical Engineering", code: "EE" },
+  { id: 6, name: "Business Administration", code: "MBA" },
+  { id: 7, name: "Psychology", code: "PSY" },
+  { id: 8, name: "Medicine", code: "MED" },
+  { id: 9, name: "Law", code: "LAW" },
+  { id: 10, name: "Arts & Humanities", code: "AH" },
+];
+
+export const filterCategories = [
+  { id: 1, name: "Mental Health Issues", value: "mental_health" },
+  { id: 2, name: "Academic Performance", value: "academic" },
+  { id: 3, name: "Social Issues", value: "social" },
+  { id: 4, name: "Family Problems", value: "family" },
+  { id: 5, name: "Career Concerns", value: "career" },
+  { id: 6, name: "Relationship Issues", value: "relationship" },
+  { id: 7, name: "Financial Stress", value: "financial" },
+  { id: 8, name: "Health Issues", value: "health" },
+];
+
 export const counsellors = [
   {
     id: 1,
@@ -224,5 +257,113 @@ export const analyticsData = {
     { month: "Apr", users: 165, sessions: 240 },
     { month: "May", users: 180, sessions: 260 },
     { month: "Jun", users: 195, sessions: 280 },
+  ],
+  academicYearBreakdown: [
+    {
+      year: "1st Year",
+      users: 320,
+      sessions: 450,
+      issues: ["Exam Anxiety", "Homesickness", "Social Adjustment"],
+    },
+    {
+      year: "2nd Year",
+      users: 280,
+      sessions: 380,
+      issues: ["Academic Pressure", "Career Confusion", "Relationship Issues"],
+    },
+    {
+      year: "3rd Year",
+      users: 250,
+      sessions: 350,
+      issues: ["Placement Anxiety", "Academic Performance", "Future Planning"],
+    },
+    {
+      year: "4th Year",
+      users: 200,
+      sessions: 280,
+      issues: ["Job Search Stress", "Final Year Pressure", "Life Transition"],
+    },
+    {
+      year: "PG",
+      users: 150,
+      sessions: 200,
+      issues: ["Research Pressure", "Thesis Anxiety", "Career Decisions"],
+    },
+    {
+      year: "PhD",
+      users: 50,
+      sessions: 80,
+      issues: [
+        "Research Stress",
+        "Publication Pressure",
+        "Academic Competition",
+      ],
+    },
+  ],
+  departmentBreakdown: [
+    {
+      department: "Computer Science",
+      users: 180,
+      sessions: 250,
+      topIssues: ["Coding Stress", "Project Deadlines", "Technical Competency"],
+    },
+    {
+      department: "Electronics & Communication",
+      users: 160,
+      sessions: 220,
+      topIssues: ["Circuit Complexity", "Lab Pressure", "Technical Skills"],
+    },
+    {
+      department: "Mechanical Engineering",
+      users: 140,
+      sessions: 190,
+      topIssues: ["Design Projects", "Workshop Pressure", "Technical Drawing"],
+    },
+    {
+      department: "Business Administration",
+      users: 200,
+      sessions: 280,
+      topIssues: [
+        "Case Study Pressure",
+        "Presentation Anxiety",
+        "Leadership Stress",
+      ],
+    },
+    {
+      department: "Psychology",
+      users: 120,
+      sessions: 160,
+      topIssues: [
+        "Research Methodology",
+        "Clinical Practice",
+        "Academic Writing",
+      ],
+    },
+    {
+      department: "Medicine",
+      users: 100,
+      sessions: 140,
+      topIssues: ["Clinical Rotations", "Exam Pressure", "Patient Care Stress"],
+    },
+    {
+      department: "Law",
+      users: 80,
+      sessions: 110,
+      topIssues: ["Moot Court Pressure", "Legal Research", "Case Analysis"],
+    },
+    {
+      department: "Arts & Humanities",
+      users: 90,
+      sessions: 120,
+      topIssues: ["Creative Block", "Essay Writing", "Cultural Studies"],
+    },
+  ],
+  categoryBreakdown: [
+    { category: "Mental Health Issues", count: 450, percentage: 36 },
+    { category: "Academic Performance", count: 320, percentage: 25.6 },
+    { category: "Social Issues", count: 180, percentage: 14.4 },
+    { category: "Family Problems", count: 150, percentage: 12 },
+    { category: "Career Concerns", count: 100, percentage: 8 },
+    { category: "Relationship Issues", count: 50, percentage: 4 },
   ],
 };

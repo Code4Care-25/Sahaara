@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -14,6 +14,11 @@ import {
   CheckCircle,
   Clock,
   Star,
+  Filter,
+  Search,
+  RefreshCw,
+  Download,
+  Eye,
 } from "lucide-react";
 import {
   LineChart,
@@ -29,12 +34,67 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { analyticsData } from "../data/mockData";
+import {
+  analyticsData,
+  academicYears,
+  departments,
+  filterCategories,
+  colleges,
+} from "../data/mockData";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
+  // Filter states
+  const [filters, setFilters] = useState({
+    academicYear: "",
+    department: "",
+    category: "",
+    college: "",
+    dateRange: "all",
+  });
+  const [showFilters, setShowFilters] = useState(false);
+  const [filteredData, setFilteredData] = useState(analyticsData);
+
   const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"];
+
+  // Filter data based on selected filters
+  const applyFilters = () => {
+    let filtered = { ...analyticsData };
+
+    if (filters.academicYear) {
+      filtered.academicYearBreakdown =
+        analyticsData.academicYearBreakdown.filter(
+          (item) => item.year === filters.academicYear
+        );
+    }
+
+    if (filters.department) {
+      filtered.departmentBreakdown = analyticsData.departmentBreakdown.filter(
+        (item) => item.department === filters.department
+      );
+    }
+
+    if (filters.category) {
+      filtered.categoryBreakdown = analyticsData.categoryBreakdown.filter(
+        (item) => item.category === filters.category
+      );
+    }
+
+    setFilteredData(filtered);
+  };
+
+  // Reset filters
+  const resetFilters = () => {
+    setFilters({
+      academicYear: "",
+      department: "",
+      category: "",
+      college: "",
+      dateRange: "all",
+    });
+    setFilteredData(analyticsData);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -69,6 +129,155 @@ const AdminDashboard = () => {
             </div>
             <div className="w-24"></div>
           </div>
+        </div>
+      </div>
+
+      {/* Filter Panel */}
+      <div className="relative bg-white/60 backdrop-blur-sm border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                <Filter className="h-4 w-4" />
+                <span>Filters</span>
+              </button>
+              <button
+                onClick={applyFilters}
+                className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+              >
+                <Search className="h-4 w-4" />
+                <span>Apply</span>
+              </button>
+              <button
+                onClick={resetFilters}
+                className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                <RefreshCw className="h-4 w-4" />
+                <span>Reset</span>
+              </button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button className="flex items-center space-x-2 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                <Download className="h-4 w-4" />
+                <span>Export</span>
+              </button>
+              <button className="flex items-center space-x-2 bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
+                <Eye className="h-4 w-4" />
+                <span>View Details</span>
+              </button>
+            </div>
+          </div>
+
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-4 bg-white/80 rounded-lg border border-gray-200">
+              {/* Academic Year Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Academic Year
+                </label>
+                <select
+                  value={filters.academicYear}
+                  onChange={(e) =>
+                    setFilters({ ...filters, academicYear: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Years</option>
+                  {academicYears.map((year) => (
+                    <option key={year.id} value={year.name}>
+                      {year.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Department Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Department
+                </label>
+                <select
+                  value={filters.department}
+                  onChange={(e) =>
+                    setFilters({ ...filters, department: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Departments</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.name}>
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Category Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Issue Category
+                </label>
+                <select
+                  value={filters.category}
+                  onChange={(e) =>
+                    setFilters({ ...filters, category: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Categories</option>
+                  {filterCategories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* College Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  College
+                </label>
+                <select
+                  value={filters.college}
+                  onChange={(e) =>
+                    setFilters({ ...filters, college: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Colleges</option>
+                  {colleges.map((college) => (
+                    <option key={college.id} value={college.name}>
+                      {college.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Date Range Filter */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Date Range
+                </label>
+                <select
+                  value={filters.dateRange}
+                  onChange={(e) =>
+                    setFilters({ ...filters, dateRange: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Time</option>
+                  <option value="7d">Last 7 Days</option>
+                  <option value="30d">Last 30 Days</option>
+                  <option value="90d">Last 3 Months</option>
+                  <option value="1y">Last Year</option>
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -375,6 +584,157 @@ const AdminDashboard = () => {
                   Active
                 </span>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Academic Year Analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Academic Year Breakdown */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Academic Year Breakdown
+              </h3>
+              <div className="text-sm text-gray-600">Student Distribution</div>
+            </div>
+            <div className="space-y-4">
+              {filteredData.academicYearBreakdown.map((year, index) => (
+                <div
+                  key={year.year}
+                  className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-semibold text-gray-900">{year.year}</h4>
+                    <span className="text-sm text-gray-600">
+                      {year.users} users
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Sessions: {year.sessions}</span>
+                    <span>
+                      Avg: {Math.round(year.sessions / year.users)} per user
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {year.issues.map((issue, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                      >
+                        {issue}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Department Analytics */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Department Analytics
+              </h3>
+              <div className="text-sm text-gray-600">Issue Distribution</div>
+            </div>
+            <div className="space-y-4">
+              {filteredData.departmentBreakdown.map((dept, index) => (
+                <div
+                  key={dept.department}
+                  className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-semibold text-gray-900">
+                      {dept.department}
+                    </h4>
+                    <span className="text-sm text-gray-600">
+                      {dept.users} users
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Sessions: {dept.sessions}</span>
+                    <span>
+                      Avg: {Math.round(dept.sessions / dept.users)} per user
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {dept.topIssues.map((issue, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                      >
+                        {issue}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Category Breakdown Chart */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 mb-12 animate-fade-in-up">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-bold text-gray-900">
+              Issue Category Distribution
+            </h3>
+            <div className="text-sm text-gray-600">Filtered Data</div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={filteredData.categoryBreakdown}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ category, percentage }) =>
+                      `${category}: ${percentage}%`
+                    }
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="percentage"
+                  >
+                    {filteredData.categoryBreakdown.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="space-y-4">
+              {filteredData.categoryBreakdown.map((category, index) => (
+                <div
+                  key={category.category}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex items-center">
+                    <div
+                      className="w-4 h-4 rounded-full mr-3"
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                    ></div>
+                    <span className="font-medium text-gray-900">
+                      {category.category}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold text-gray-900">
+                      {category.count} cases
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {category.percentage}%
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

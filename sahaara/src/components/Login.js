@@ -23,21 +23,39 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    console.log("Login attempt:", {
+      loginType,
+      username,
+      password,
+      selectedCollege,
+    });
+
     // Simulate loading
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Mock login - any credentials work for demo
     if (username && password && (loginType !== "student" || selectedCollege)) {
+      console.log("Login successful, redirecting to:", loginType);
       setShowSuccess(true);
       setTimeout(() => {
-        if (loginType === "counsellor") {
-          navigate("/counsellor");
-        } else if (loginType === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/dashboard");
+        try {
+          if (loginType === "counsellor") {
+            console.log("Navigating to counsellor page");
+            navigate("/counsellor");
+          } else if (loginType === "admin") {
+            console.log("Navigating to admin page");
+            navigate("/admin");
+          } else {
+            console.log("Navigating to dashboard");
+            navigate("/dashboard");
+          }
+        } catch (error) {
+          console.error("Navigation error:", error);
         }
       }, 1000);
+    } else {
+      console.log("Login failed - missing required fields");
+      alert("Please fill in all required fields");
     }
     setIsLoading(false);
   };
@@ -56,10 +74,10 @@ const Login = () => {
       </div>
 
       <div className="relative flex items-center justify-center min-h-screen p-4">
-        <div className="max-w-md w-full space-y-8 animate-fade-in-up">
+        <div className="max-w-4xl w-full space-y-6 animate-fade-in-up">
           {/* Header */}
           <div className="text-center">
-            <div className="flex justify-center items-center mb-6">
+            <div className="flex justify-center items-center mb-4">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30"></div>
                 <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl">
@@ -83,10 +101,40 @@ const Login = () => {
             </p>
           </div>
 
+          {/* Features Preview */}
+          <div className="grid grid-cols-3 gap-4 mt-6">
+            <div className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-2 bg-blue-100 rounded-xl w-fit mx-auto mb-2 group-hover:scale-110 transition-transform">
+                <Heart className="h-6 w-6 text-blue-600" />
+              </div>
+              <p className="text-sm font-semibold text-gray-700">
+                Mental Health Support
+              </p>
+            </div>
+            <div className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-2 bg-green-100 rounded-xl w-fit mx-auto mb-2 group-hover:scale-110 transition-transform">
+                <Users className="h-6 w-6 text-green-600" />
+              </div>
+              <p className="text-sm font-semibold text-gray-700">
+                Peer Support
+              </p>
+            </div>
+            <div className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-2 bg-purple-100 rounded-xl w-fit mx-auto mb-2 group-hover:scale-110 transition-transform">
+                <Shield className="h-6 w-6 text-purple-600" />
+              </div>
+              <p className="text-sm font-semibold text-gray-700">
+                Safe & Anonymous
+              </p>
+            </div>
+          </div>
+
+
+
           {/* Login Form */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500">
-            <div className="mb-8">
-              <div className="flex space-x-1 mb-6 bg-gray-100 rounded-2xl p-1">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border border-white/20 hover:shadow-3xl transition-all duration-500">
+            <div className="mb-6">
+              <div className="flex space-x-1 mb-4 bg-gray-100 rounded-2xl p-1">
                 <button
                   onClick={() => setLoginType("student")}
                   className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
@@ -120,12 +168,12 @@ const Login = () => {
               </div>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-4">
               {loginType === "student" && (
-                <div className="animate-fade-in-up">
+                <div className="animate-fade-in-up flex items-center space-x-4">
                   <label
                     htmlFor="college"
-                    className="block text-sm font-semibold text-gray-700 mb-3"
+                    className="w-48 text-sm font-semibold text-gray-700"
                   >
                     Select Your College
                   </label>
@@ -133,7 +181,7 @@ const Login = () => {
                     id="college"
                     value={selectedCollege}
                     onChange={(e) => setSelectedCollege(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
                     required
                   >
                     <option value="">Choose your college</option>
@@ -146,10 +194,10 @@ const Login = () => {
                 </div>
               )}
 
-              <div className="animate-fade-in-up delay-100">
+              <div className="animate-fade-in-up delay-100 flex items-center space-x-4">
                 <label
                   htmlFor="username"
-                  className="block text-sm font-semibold text-gray-700 mb-3"
+                  className="w-48 text-sm font-semibold text-gray-700"
                 >
                   {loginType === "student" ? "Student ID" : "Username"}
                 </label>
@@ -158,7 +206,7 @@ const Login = () => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
                   placeholder={
                     loginType === "student"
                       ? "Enter your student ID"
@@ -168,10 +216,10 @@ const Login = () => {
                 />
               </div>
 
-              <div className="animate-fade-in-up delay-200">
+              <div className="animate-fade-in-up delay-200 flex items-center space-x-4">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-semibold text-gray-700 mb-3"
+                  className="w-48 text-sm font-semibold text-gray-700"
                 >
                   Password
                 </label>
@@ -180,7 +228,7 @@ const Login = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
                   placeholder="Enter password"
                   required
                 />
@@ -231,33 +279,7 @@ const Login = () => {
             )}
           </div>
 
-          {/* Features Preview */}
-          <div className="grid grid-cols-3 gap-4 mt-8">
-            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-3 bg-blue-100 rounded-xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Heart className="h-8 w-8 text-blue-600" />
-              </div>
-              <p className="text-sm font-semibold text-gray-700">
-                Mental Health Support
-              </p>
-            </div>
-            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-3 bg-green-100 rounded-xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Users className="h-8 w-8 text-green-600" />
-              </div>
-              <p className="text-sm font-semibold text-gray-700">
-                Peer Support
-              </p>
-            </div>
-            <div className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-3 bg-purple-100 rounded-xl w-fit mx-auto mb-3 group-hover:scale-110 transition-transform">
-                <Shield className="h-8 w-8 text-purple-600" />
-              </div>
-              <p className="text-sm font-semibold text-gray-700">
-                Safe & Anonymous
-              </p>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
