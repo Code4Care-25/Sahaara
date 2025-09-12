@@ -74,67 +74,65 @@ const Login = () => {
       </div>
 
       <div className="relative flex items-center justify-center min-h-screen p-4">
-        <div className="max-w-4xl w-full space-y-6 animate-fade-in-up">
+        <div className="max-w-4xl w-full space-y-4 animate-fade-in-up">
           {/* Header */}
           <div className="text-center">
-            <div className="flex justify-center items-center mb-4">
+            <div className="flex justify-center items-center mb-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30"></div>
-                <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl">
-                  <Heart className="h-12 w-12 text-white animate-pulse" />
+                <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl">
+                  <Heart className="h-8 w-8 text-white animate-pulse" />
                 </div>
               </div>
-              <div className="ml-4">
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+              <div className="ml-3">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                   Sahaara
                 </h1>
-                <div className="flex items-center justify-center space-x-2 mt-2">
-                  <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
-                  <p className="text-gray-600 text-sm font-medium">
+                <div className="flex items-center justify-center space-x-2 mt-1">
+                  <Sparkles className="h-3 w-3 text-yellow-500 animate-pulse" />
+                  <p className="text-gray-600 text-xs font-medium">
                     Mental Health Support Platform
                   </p>
                 </div>
               </div>
             </div>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-sm leading-relaxed">
               Your journey to better mental health starts here
             </p>
           </div>
 
           {/* Features Preview */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <div className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-2 bg-blue-100 rounded-xl w-fit mx-auto mb-2 group-hover:scale-110 transition-transform">
-                <Heart className="h-6 w-6 text-blue-600" />
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            <div className="text-center p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-1 bg-blue-100 rounded-lg w-fit mx-auto mb-1 group-hover:scale-110 transition-transform">
+                <Heart className="h-4 w-4 text-blue-600" />
               </div>
-              <p className="text-sm font-semibold text-gray-700">
+              <p className="text-xs font-semibold text-gray-700">
                 Mental Health Support
               </p>
             </div>
-            <div className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-2 bg-green-100 rounded-xl w-fit mx-auto mb-2 group-hover:scale-110 transition-transform">
-                <Users className="h-6 w-6 text-green-600" />
+            <div className="text-center p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-1 bg-green-100 rounded-lg w-fit mx-auto mb-1 group-hover:scale-110 transition-transform">
+                <Users className="h-4 w-4 text-green-600" />
               </div>
-              <p className="text-sm font-semibold text-gray-700">
+              <p className="text-xs font-semibold text-gray-700">
                 Peer Support
               </p>
             </div>
-            <div className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-2 bg-purple-100 rounded-xl w-fit mx-auto mb-2 group-hover:scale-110 transition-transform">
-                <Shield className="h-6 w-6 text-purple-600" />
+            <div className="text-center p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+              <div className="p-1 bg-purple-100 rounded-lg w-fit mx-auto mb-1 group-hover:scale-110 transition-transform">
+                <Shield className="h-4 w-4 text-purple-600" />
               </div>
-              <p className="text-sm font-semibold text-gray-700">
+              <p className="text-xs font-semibold text-gray-700">
                 Safe & Anonymous
               </p>
             </div>
           </div>
 
-
-
           {/* Login Form */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border border-white/20 hover:shadow-3xl transition-all duration-500">
-            <div className="mb-6">
-              <div className="flex space-x-1 mb-4 bg-gray-100 rounded-2xl p-1">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-4 border border-white/20 hover:shadow-3xl transition-all duration-500">
+            <div className="mb-4">
+              <div className="flex space-x-1 mb-3 bg-gray-100 rounded-2xl p-1">
                 <button
                   onClick={() => setLoginType("student")}
                   className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
@@ -168,12 +166,12 @@ const Login = () => {
               </div>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-3">
               {loginType === "student" && (
-                <div className="animate-fade-in-up flex items-center space-x-4">
+                <div className="animate-fade-in-up flex items-center space-x-3">
                   <label
                     htmlFor="college"
-                    className="w-48 text-sm font-semibold text-gray-700"
+                    className="w-40 text-sm font-semibold text-gray-700"
                   >
                     Select Your College
                   </label>
@@ -181,7 +179,7 @@ const Login = () => {
                     id="college"
                     value={selectedCollege}
                     onChange={(e) => setSelectedCollege(e.target.value)}
-                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                    className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
                     required
                   >
                     <option value="">Choose your college</option>
@@ -194,10 +192,10 @@ const Login = () => {
                 </div>
               )}
 
-              <div className="animate-fade-in-up delay-100 flex items-center space-x-4">
+              <div className="animate-fade-in-up delay-100 flex items-center space-x-3">
                 <label
                   htmlFor="username"
-                  className="w-48 text-sm font-semibold text-gray-700"
+                  className="w-40 text-sm font-semibold text-gray-700"
                 >
                   {loginType === "student" ? "Student ID" : "Username"}
                 </label>
@@ -206,7 +204,7 @@ const Login = () => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                  className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
                   placeholder={
                     loginType === "student"
                       ? "Enter your student ID"
@@ -216,10 +214,10 @@ const Login = () => {
                 />
               </div>
 
-              <div className="animate-fade-in-up delay-200 flex items-center space-x-4">
+              <div className="animate-fade-in-up delay-200 flex items-center space-x-3">
                 <label
                   htmlFor="password"
-                  className="w-48 text-sm font-semibold text-gray-700"
+                  className="w-40 text-sm font-semibold text-gray-700"
                 >
                   Password
                 </label>
@@ -228,7 +226,7 @@ const Login = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                  className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
                   placeholder="Enter password"
                   required
                 />
@@ -237,7 +235,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isLoading ? (
                   <>
@@ -264,22 +262,20 @@ const Login = () => {
 
             {/* Guest Access */}
             {loginType === "student" && (
-              <div className="mt-8 pt-6 border-t border-gray-200 animate-fade-in-up delay-300">
-                <p className="text-center text-sm text-gray-600 mb-4">
+              <div className="mt-4 pt-4 border-t border-gray-200 animate-fade-in-up delay-300">
+                <p className="text-center text-xs text-gray-600 mb-3">
                   Want to try without logging in?
                 </p>
                 <button
                   onClick={handleGuestAccess}
-                  className="w-full bg-white/70 text-gray-700 py-3 px-4 rounded-xl hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center"
+                  className="w-full bg-white/70 text-gray-700 py-2 px-3 rounded-lg hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center"
                 >
-                  <Users className="h-4 w-4 mr-2" />
+                  <Users className="h-3 w-3 mr-2" />
                   Access Chat Buddy (Guest Mode)
                 </button>
               </div>
             )}
           </div>
-
-          
         </div>
       </div>
     </div>
