@@ -6,7 +6,7 @@ import {
   MessageCircle,
   Calendar,
   TrendingUp,
-  AlertTriangle,
+  AlertTriangle, 
   Sparkles,
   Heart,
   Shield,
@@ -260,7 +260,7 @@ const AdminDashboard = () => {
               {/* Date Range Filter */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Date Range
+                  Date Range 1
                 </label>
                 <select
                   value={filters.dateRange}

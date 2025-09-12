@@ -9,8 +9,9 @@ import {
   Sparkles,
   User,
   ArrowRight,
-  Shield,
-  Heart,
+  Ticket,
+  History,
+  X,
 } from "lucide-react";
 import { counsellors } from "../data/mockData";
 
@@ -24,7 +25,39 @@ const AppointmentBooking = () => {
     notes: "",
     priority: "Medium",
   });
+  const [isBookingComplete, setIsBookingComplete] = useState(false);
+  const [showFlashMessage, setShowFlashMessage] = useState(false);
+  const [flashMessage, setFlashMessage] = useState("");
+  const [showTicketForm, setShowTicketForm] = useState(false);
   const [ticketId, setTicketId] = useState("");
+
+  // Mock recent bookings data
+  const recentBookings = [
+    {
+      id: 1,
+      counsellor: "Dr. Priya Sharma",
+      date: "2024-01-10",
+      time: "2:00 PM",
+      status: "Completed",
+      issue: "Anxiety & Stress",
+    },
+    {
+      id: 2,
+      counsellor: "Dr. Rajesh Kumar",
+      date: "2024-01-12",
+      time: "10:00 AM",
+      status: "Upcoming",
+      issue: "Academic Pressure",
+    },
+    {
+      id: 3,
+      counsellor: "Dr. Anjali Mehta",
+      date: "2024-01-08",
+      time: "3:00 PM",
+      status: "Completed",
+      issue: "Relationship Issues",
+    },
+  ];
 
   const handleBookAppointment = () => {
     if (selectedCounsellor && selectedSlot) {
@@ -32,34 +65,91 @@ const AppointmentBooking = () => {
     }
   };
 
-  const handleSubmitBooking = (e) => {
-    e.preventDefault();
-    // Generate mock ticket ID
-    const newTicketId = `TKT${Date.now().toString().slice(-6)}`;
-    setTicketId(newTicketId);
-    alert(`Appointment booked successfully! Your ticket ID is: ${newTicketId}`);
+  const showFlash = (message, type = "success") => {
+    setFlashMessage(message);
+    setShowFlashMessage(true);
+    setTimeout(() => {
+      setShowFlashMessage(false);
+    }, 3000);
   };
 
-  const handleContinueWithTicket = () => {
-    const inputTicketId = prompt("Enter your ticket ID:");
-    if (inputTicketId) {
-      setTicketId(inputTicketId);
-      alert(`Continuing with ticket ID: ${inputTicketId}`);
+  const handleSubmitBooking = (e) => {
+    e.preventDefault();
+    setIsBookingComplete(true);
+    showFlash("Appointment booked successfully! Redirecting to dashboard...");
+    // Simulate booking success
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 2000);
+  };
+
+  const handleTicketBooking = (e) => {
+    e.preventDefault();
+    if (ticketId.trim()) {
+      showFlash(
+        `Booking with ticket ID: ${ticketId}. Redirecting to dashboard...`
+      );
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } else {
+      showFlash("Please enter a valid ticket ID", "error");
     }
   };
 
+  if (isBookingComplete) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-12 text-center max-w-md mx-4">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="h-10 w-10 text-green-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Booking Confirmed!
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Your appointment has been successfully booked. You will receive a
+            confirmation email shortly.
+          </p>
+          <div className="space-y-3 text-sm text-gray-500">
+            <p>
+              <strong>Counsellor:</strong> {selectedCounsellor?.name}
+            </p>
+            <p>
+              <strong>Date:</strong> {selectedSlot?.date}
+            </p>
+            <p>
+              <strong>Time:</strong> {selectedSlot?.time}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
-      </div>
+      {/* Flash Message */}
+      {showFlashMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
+          <div
+            className={`px-6 py-3 rounded-lg shadow-lg ${
+              flashMessage.includes("error")
+                ? "bg-red-100 text-red-800 border border-red-200"
+                : "bg-green-100 text-green-800 border border-green-200"
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="h-5 w-5" />
+              <span className="font-medium">{flashMessage}</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <div className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate("/dashboard")}
@@ -69,7 +159,7 @@ const AppointmentBooking = () => {
               Back to Dashboard
             </button>
             <div className="text-center">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                 Book an Appointment
               </h1>
               <div className="flex items-center justify-center space-x-2 mt-2">
@@ -85,281 +175,349 @@ const AppointmentBooking = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 py-8">
-        {/* Quick Actions */}
-        <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
-            <div className="flex items-center mb-6">
-              <div className="p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl mr-4 group-hover:scale-110 transition-transform">
-                <Calendar className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  New Appointment
-                </h3>
-                <p className="text-gray-600 text-lg">
-                  Book a new appointment with our professional counsellors
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowBookingForm(false)}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
-            >
-              Book Now
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </button>
-          </div>
-
-          <div className="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 hover:shadow-3xl transition-all duration-500 hover:-translate-y-2">
-            <div className="flex items-center mb-6">
-              <div className="p-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl mr-4 group-hover:scale-110 transition-transform">
-                <CheckCircle className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Continue with Ticket
-                </h3>
-                <p className="text-gray-600 text-lg">
-                  Already have a ticket ID? Continue your previous booking
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={handleContinueWithTicket}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
-            >
-              Continue
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </button>
-          </div>
-        </div>
-
-        {!showBookingForm ? (
-          /* Counsellor Selection */
-          <div className="space-y-8">
+        {!showBookingForm && !showTicketForm ? (
+          /* Counsellor Selection with Parallel Layout */
+          <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Select a Counsellor
               </h2>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600">
                 Choose from our team of experienced mental health professionals
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {counsellors.map((counsellor, index) => (
-                <div
-                  key={counsellor.id}
-                  className={`group bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 cursor-pointer transition-all duration-500 hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 border-2 ${
-                    selectedCounsellor?.id === counsellor.id
-                      ? "border-blue-500 bg-blue-50/50"
-                      : "border-white/20 hover:border-blue-200"
-                  } animate-fade-in-up`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => setSelectedCounsellor(counsellor)}
-                >
-                  <div className="flex items-center mb-6">
-                    <div className="relative">
-                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform">
-                        <span className="text-white font-bold text-xl">
-                          {counsellor.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
+
+            {/* Parallel Layout: Counsellors and Booking Form */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Counsellors List */}
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  {counsellors.map((counsellor, index) => (
+                    <div
+                      key={counsellor.id}
+                      className={`group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 border-2 ${
+                        selectedCounsellor?.id === counsellor.id
+                          ? "border-blue-500 bg-blue-50/50"
+                          : "border-white/20 hover:border-blue-200"
+                      }`}
+                      onClick={() => setSelectedCounsellor(counsellor)}
+                    >
+                      <div className="flex items-center mb-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                          <span className="text-white font-bold text-sm">
+                            {counsellor.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </span>
+                        </div>
+                        <div>
+                          <h3 className="text-base font-bold text-gray-900">
+                            {counsellor.name}
+                          </h3>
+                          <p className="text-gray-600 text-xs">
+                            {counsellor.specialization}
+                          </p>
+                        </div>
                       </div>
-                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        {counsellor.name}
-                      </h3>
-                      <p className="text-gray-600 font-medium">
-                        {counsellor.specialization}
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="h-5 w-5 mr-3 text-blue-500" />
-                      <span className="font-medium">
-                        {counsellor.experience} experience
-                      </span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Star className="h-5 w-5 mr-3 text-yellow-500" />
-                      <span className="font-medium">
-                        {counsellor.rating}/5.0 rating
-                      </span>
-                    </div>
-                  </div>
+                      <div className="space-y-2 mb-3">
+                        <div className="flex items-center text-gray-600 text-xs">
+                          <Clock className="h-3 w-3 mr-1 text-blue-500" />
+                          <span>{counsellor.experience} experience</span>
+                        </div>
+                        <div className="flex items-center text-gray-600 text-xs">
+                          <Star className="h-3 w-3 mr-1 text-yellow-500" />
+                          <span>{counsellor.rating}/5.0 rating</span>
+                        </div>
+                      </div>
 
-                  <div className="space-y-4">
-                    <h4 className="text-lg font-semibold text-gray-700">
-                      Available Slots:
-                    </h4>
-                    <div className="space-y-2">
-                      {counsellor.availableSlots
-                        .filter((slot) => slot.available)
-                        .slice(0, 3)
-                        .map((slot, slotIndex) => (
-                          <div
-                            key={slotIndex}
-                            className={`text-sm p-3 rounded-xl transition-all duration-300 ${
-                              selectedSlot?.date === slot.date &&
-                              selectedSlot?.time === slot.time
-                                ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedSlot(slot);
-                            }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="font-medium">{slot.date}</span>
-                              <span className="font-semibold">{slot.time}</span>
-                            </div>
-                          </div>
-                        ))}
+                      <div>
+                        <h4 className="text-xs font-semibold text-gray-700 mb-1">
+                          Available Slots:
+                        </h4>
+                        <div className="space-y-1">
+                          {counsellor.availableSlots
+                            .filter((slot) => slot.available)
+                            .slice(0, 2)
+                            .map((slot, slotIndex) => (
+                              <div
+                                key={slotIndex}
+                                className={`text-xs p-2 rounded-lg transition-all duration-300 ${
+                                  selectedSlot?.date === slot.date &&
+                                  selectedSlot?.time === slot.time
+                                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedSlot(slot);
+                                }}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="font-medium">
+                                    {slot.date}
+                                  </span>
+                                  <span className="font-semibold">
+                                    {slot.time}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {selectedCounsellor && selectedSlot && (
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Selected Appointment
-                  </h3>
-                  <p className="text-gray-600">
-                    Review your selection before booking
-                  </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
-                      <span className="text-white font-bold text-xl">
-                        {selectedCounsellor.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-xl font-bold text-gray-900 mb-1">
-                        {selectedCounsellor.name}
-                      </p>
-                      <p className="text-gray-600 font-medium">
-                        {selectedSlot.date} at {selectedSlot.time}
-                      </p>
-                      <p className="text-gray-600 font-medium">
-                        {selectedCounsellor.specialization}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleBookAppointment}
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center"
-                  >
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Book Appointment
-                  </button>
+                  ))}
                 </div>
               </div>
-            )}
+
+              {/* Booking Form Side */}
+              <div className="space-y-4">
+                {/* Ticket ID Button */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 border border-white/20">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                    <Ticket className="h-5 w-5 mr-2 text-blue-500" />
+                    Quick Booking Options
+                  </h3>
+                  <button
+                    onClick={() => setShowTicketForm(true)}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                  >
+                    <Ticket className="h-4 w-4 mr-2" />
+                    Book with Existing Ticket ID
+                  </button>
+                </div>
+
+                {/* Selected Appointment Summary */}
+                {selectedCounsellor && selectedSlot && (
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 border border-white/20">
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">
+                      Selected Appointment
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">
+                            {selectedCounsellor.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-900 text-sm">
+                            {selectedCounsellor.name}
+                          </h4>
+                          <p className="text-gray-600 text-xs">
+                            {selectedCounsellor.specialization}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium text-gray-700">
+                            Date:
+                          </span>
+                          <span className="text-gray-900">
+                            {selectedSlot.date}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm mt-1">
+                          <span className="font-medium text-gray-700">
+                            Time:
+                          </span>
+                          <span className="text-gray-900">
+                            {selectedSlot.time}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={handleBookAppointment}
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                      >
+                        Book Appointment
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Recent Bookings Section - Moved to Bottom */}
+            <div className="mt-8">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 flex items-center">
+                    <History className="h-5 w-5 mr-2 text-blue-500" />
+                    Recent Bookings
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  {recentBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">
+                            {booking.counsellor
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </span>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {booking.counsellor}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {booking.issue}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-600">
+                            {booking.date}
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            {booking.time}
+                          </span>
+                        </div>
+                        <span
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                            booking.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {booking.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : showTicketForm ? (
+          /* Ticket Booking Form */
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20">
+              <div className="flex items-center justify-between mb-6">
+                <div className="text-center flex-1">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Book with Ticket ID
+                  </h2>
+                  <p className="text-gray-600">
+                    Enter your existing ticket ID to book an appointment
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowTicketForm(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <form onSubmit={handleTicketBooking} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Ticket ID
+                  </label>
+                  <input
+                    type="text"
+                    value={ticketId}
+                    onChange={(e) => setTicketId(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                    placeholder="Enter your ticket ID (e.g., TKT-123456)"
+                    required
+                  />
+                </div>
+
+                <div className="flex space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowTicketForm(false)}
+                    className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-all duration-300 font-semibold"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  >
+                    Book with Ticket
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         ) : (
           /* Booking Form */
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20 animate-fade-in-up">
-              <div className="text-center mb-8">
-                <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4">
-                  Appointment Details
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Complete Your Booking
                 </h2>
-                <p className="text-gray-600 text-lg">
-                  Please provide some additional information for your session
+                <p className="text-gray-600">
+                  Please provide some details about your appointment
                 </p>
               </div>
 
-              <form onSubmit={handleSubmitBooking} className="space-y-8">
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                    <User className="h-6 w-6 mr-3 text-blue-600" />
-                    Counsellor & Time
-                  </h3>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">
-                        {selectedCounsellor?.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-lg font-semibold text-gray-900">
-                        {selectedCounsellor?.name}
-                      </p>
-                      <p className="text-gray-600 font-medium">
-                        {selectedSlot?.date} at {selectedSlot?.time}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-700 mb-3">
-                      What would you like to discuss?
-                    </label>
-                    <select
-                      value={bookingDetails.issue}
-                      onChange={(e) =>
-                        setBookingDetails({
-                          ...bookingDetails,
-                          issue: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
-                      required
-                    >
-                      <option value="">Select an issue</option>
-                      <option value="anxiety">Anxiety & Stress</option>
-                      <option value="depression">Depression</option>
-                      <option value="academic">Academic Pressure</option>
-                      <option value="relationships">Relationship Issues</option>
-                      <option value="family">Family Problems</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-700 mb-3">
-                      Priority Level
-                    </label>
-                    <select
-                      value={bookingDetails.priority}
-                      onChange={(e) =>
-                        setBookingDetails({
-                          ...bookingDetails,
-                          priority: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
-                    >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                      <option value="Urgent">Urgent</option>
-                    </select>
-                  </div>
+              <form onSubmit={handleSubmitBooking} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    What would you like to discuss?
+                  </label>
+                  <select
+                    value={bookingDetails.issue}
+                    onChange={(e) =>
+                      setBookingDetails({
+                        ...bookingDetails,
+                        issue: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                    required
+                  >
+                    <option value="">Select an issue</option>
+                    <option value="anxiety">Anxiety & Stress</option>
+                    <option value="depression">Depression</option>
+                    <option value="academic">Academic Pressure</option>
+                    <option value="relationships">Relationship Issues</option>
+                    <option value="career">Career Guidance</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block text-lg font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Priority Level
+                  </label>
+                  <select
+                    value={bookingDetails.priority}
+                    onChange={(e) =>
+                      setBookingDetails({
+                        ...bookingDetails,
+                        priority: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Additional Notes (Optional)
                   </label>
                   <textarea
@@ -370,62 +528,28 @@ const AppointmentBooking = () => {
                         notes: e.target.value,
                       })
                     }
-                    rows={6}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                    rows={4}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                     placeholder="Please share any additional information that might help the counsellor prepare for your session..."
-                  ></textarea>
+                  />
                 </div>
 
-                <div className="flex space-x-6">
+                <div className="flex space-x-4">
                   <button
                     type="button"
                     onClick={() => setShowBookingForm(false)}
-                    className="flex-1 bg-gray-200 text-gray-700 px-8 py-4 rounded-xl hover:bg-gray-300 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-all duration-300 font-semibold"
                   >
-                    Cancel
+                    Back
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                   >
-                    <CheckCircle className="h-5 w-5 mr-2" />
                     Confirm Booking
                   </button>
                 </div>
               </form>
-            </div>
-          </div>
-        )}
-
-        {ticketId && (
-          <div className="mt-12 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-3xl p-8 animate-fade-in-up">
-            <div className="flex items-center justify-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center animate-pulse">
-                <CheckCircle className="h-8 w-8 text-white" />
-              </div>
-            </div>
-            <div className="text-center">
-              <h3 className="text-3xl font-bold text-green-900 mb-4">
-                Appointment Booked Successfully!
-              </h3>
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 mb-6">
-                <p className="text-lg text-green-800 mb-2">
-                  Your ticket ID is:
-                </p>
-                <p className="text-2xl font-bold text-green-900 bg-green-100 rounded-xl py-3 px-6 inline-block">
-                  {ticketId}
-                </p>
-              </div>
-              <p className="text-green-700 text-lg">
-                You will receive a confirmation email shortly with all the
-                details.
-              </p>
-              <div className="flex items-center justify-center space-x-2 mt-4">
-                <Heart className="h-5 w-5 text-green-600" />
-                <span className="text-green-600 font-medium">
-                  Thank you for choosing Sahaara!
-                </span>
-              </div>
             </div>
           </div>
         )}

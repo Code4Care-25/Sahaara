@@ -44,7 +44,7 @@ const Login = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Mock login - any credentials work for demo
-    if (username && password && (loginType !== "student" || selectedCollege)) {
+    if (username && password && selectedCollege) {
       console.log("Login successful, redirecting to:", loginType);
       setShowSuccess(true);
       setTimeout(() => {
@@ -88,34 +88,36 @@ const Login = () => {
       </div>
 
       <div className="relative flex items-center justify-center min-h-screen p-4">
-        <div className="max-w-4xl w-full space-y-4 animate-fade-in-up">
+        <div className="max-w-2xl w-full animate-fade-in-up">
           {/* Header */}
-          <div className="text-center">
+          <div className="text-center mb-6">
             {/* Back Button */}
             {location.state?.selectedInstitution && (
-              <div className="flex justify-start mb-4">
+              <div className="flex justify-start mb-3">
                 <button
                   onClick={handleBackToInstitutionSelection}
                   className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  <span className="text-sm font-medium">Back to Institution Selection</span>
+                  <span className="text-sm font-medium">
+                    Back to Institution Selection
+                  </span>
                 </button>
               </div>
             )}
-            
-            <div className="flex justify-center items-center mb-3">
+
+            <div className="flex justify-center items-center mb-2">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-30"></div>
-                <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-2xl">
-                  <Heart className="h-8 w-8 text-white animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-30"></div>
+                <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-xl">
+                  <Heart className="h-6 w-6 text-white animate-pulse" />
                 </div>
               </div>
-              <div className="ml-3">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+              <div className="ml-2">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                   Sahaara
                 </h1>
-                <div className="flex items-center justify-center space-x-2 mt-1">
+                <div className="flex items-center justify-center space-x-1 mt-0.5">
                   <Sparkles className="h-3 w-3 text-yellow-500 animate-pulse" />
                   <p className="text-gray-600 text-xs font-medium">
                     Mental Health Support Platform
@@ -123,48 +125,17 @@ const Login = () => {
                 </div>
               </div>
             </div>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Your journey to better mental health starts here
-            </p>
-          </div>
-
-          {/* Features Preview */}
-          <div className="grid grid-cols-3 gap-3 mt-4">
-            <div className="text-center p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-1 bg-blue-100 rounded-lg w-fit mx-auto mb-1 group-hover:scale-110 transition-transform">
-                <Heart className="h-4 w-4 text-blue-600" />
-              </div>
-              <p className="text-xs font-semibold text-gray-700">
-                Mental Health Support
-              </p>
-            </div>
-            <div className="text-center p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-1 bg-green-100 rounded-lg w-fit mx-auto mb-1 group-hover:scale-110 transition-transform">
-                <Users className="h-4 w-4 text-green-600" />
-              </div>
-              <p className="text-xs font-semibold text-gray-700">
-                Peer Support
-              </p>
-            </div>
-            <div className="text-center p-3 bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-              <div className="p-1 bg-purple-100 rounded-lg w-fit mx-auto mb-1 group-hover:scale-110 transition-transform">
-                <Shield className="h-4 w-4 text-purple-600" />
-              </div>
-              <p className="text-xs font-semibold text-gray-700">
-                Safe & Anonymous
-              </p>
-            </div>
           </div>
 
           {/* Login Form */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-4 border border-white/20 hover:shadow-3xl transition-all duration-500">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-white/20 hover:shadow-3xl transition-all duration-500">
             <div className="mb-4">
-              <div className="flex space-x-1 mb-3 bg-gray-100 rounded-2xl p-1">
+              <div className="flex space-x-1 mb-4 bg-gray-100 rounded-xl p-1">
                 <button
                   onClick={() => setLoginType("student")}
-                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-300 ${
                     loginType === "student"
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
                       : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                   }`}
                 >
@@ -172,9 +143,9 @@ const Login = () => {
                 </button>
                 <button
                   onClick={() => setLoginType("counsellor")}
-                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-300 ${
                     loginType === "counsellor"
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
                       : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                   }`}
                 >
@@ -182,9 +153,9 @@ const Login = () => {
                 </button>
                 <button
                   onClick={() => setLoginType("admin")}
-                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all duration-300 ${
                     loginType === "admin"
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
                       : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                   }`}
                 >
@@ -193,108 +164,141 @@ const Login = () => {
               </div>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-3">
-              {loginType === "student" && (
-                <div className="animate-fade-in-up">
-                  {location.state?.selectedInstitution ? (
-                    // Show selected institution as read-only when coming from institution selection
-                    <div className="flex items-center space-x-3 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg">
-                      <Building2 className="h-5 w-5 text-blue-600" />
-                      <div className="flex-1">
-                        <label className="text-sm font-semibold text-blue-800">
-                          Selected Institution
-                        </label>
-                        <p className="text-blue-700 font-medium">{selectedCollege}</p>
-                      </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              {/* Institution Selection - Show for all login types */}
+              <div className="animate-fade-in-up">
+                {location.state?.selectedInstitution ? (
+                  // Show selected institution with compact logo display
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-3 shadow-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-sm font-bold text-gray-800">
+                        Selected Institution
+                      </h3>
                       <button
                         type="button"
                         onClick={handleBackToInstitutionSelection}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium underline"
+                        className="text-blue-600 hover:text-blue-800 text-xs font-medium underline hover:no-underline transition-all duration-200"
                       >
                         Change
                       </button>
                     </div>
-                  ) : (
-                    // Show dropdown when accessing login directly
                     <div className="flex items-center space-x-3">
-                      <label
-                        htmlFor="college"
-                        className="w-40 text-sm font-semibold text-gray-700"
-                      >
-                        Select Your College
-                      </label>
-                      <select
-                        id="college"
-                        value={selectedCollege}
-                        onChange={(e) => setSelectedCollege(e.target.value)}
-                        className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
-                        required
-                      >
-                        <option value="">Choose your college</option>
-                        {colleges.map((college) => (
-                          <option key={college.id} value={college.name}>
-                            {college.name}
-                          </option>
-                        ))}
-                      </select>
+                      {(() => {
+                        const college = colleges.find(
+                          (c) => c.name === selectedCollege
+                        );
+                        return college?.logo ? (
+                          <div className="flex-shrink-0">
+                            <img
+                              src={college.logo}
+                              alt={`${selectedCollege} logo`}
+                              className="h-12 w-12 object-contain bg-white p-1 rounded-lg shadow-md border border-gray-200"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex-shrink-0">
+                            <div className="h-12 w-12 bg-blue-100 rounded-lg shadow-md border border-gray-200 flex items-center justify-center">
+                              <Building2 className="h-6 w-6 text-blue-600" />
+                            </div>
+                          </div>
+                        );
+                      })()}
+                      <div className="flex-1">
+                        <h4 className="text-sm font-bold text-gray-800">
+                          {selectedCollege}
+                        </h4>
+                        <p className="text-gray-600 text-xs">
+                          Educational Institution
+                        </p>
+                      </div>
                     </div>
-                  )}
-                </div>
-              )}
-
-              <div className="animate-fade-in-up delay-100 flex items-center space-x-3">
-                <label
-                  htmlFor="username"
-                  className="w-40 text-sm font-semibold text-gray-700"
-                >
-                  {loginType === "student" ? "Student ID" : "Username"}
-                </label>
-                <input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
-                  placeholder={
-                    loginType === "student"
-                      ? "Enter your student ID"
-                      : "Enter username"
-                  }
-                  required
-                />
+                  </div>
+                ) : (
+                  // Show dropdown when accessing login directly
+                  <div className="flex items-center space-x-3">
+                    <label
+                      htmlFor="college"
+                      className="w-40 text-sm font-semibold text-gray-700"
+                    >
+                      Select Your College
+                    </label>
+                    <select
+                      id="college"
+                      value={selectedCollege}
+                      onChange={(e) => setSelectedCollege(e.target.value)}
+                      className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
+                      required
+                    >
+                      <option value="">Choose your college</option>
+                      {colleges.map((college) => (
+                        <option key={college.id} value={college.name}>
+                          {college.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
-              <div className="animate-fade-in-up delay-200 flex items-center space-x-3">
-                <label
-                  htmlFor="password"
-                  className="w-40 text-sm font-semibold text-gray-700"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
-                  placeholder="Enter password"
-                  required
-                />
+              <div className="space-y-3">
+                <div className="animate-fade-in-up delay-100">
+                  <div className="flex items-center space-x-3">
+                    <label
+                      htmlFor="username"
+                      className="text-sm font-semibold text-gray-700 w-32"
+                    >
+                      {loginType === "student" ? "Student ID" : "Username"}
+                    </label>
+                    <input
+                      id="username"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="flex-1 px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 text-sm"
+                      placeholder={
+                        loginType === "student"
+                          ? "Enter your student ID"
+                          : "Enter username"
+                      }
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="animate-fade-in-up delay-200">
+                  <div className="flex items-center space-x-3">
+                    <label
+                      htmlFor="password"
+                      className="text-sm font-semibold text-gray-700 w-32"
+                    >
+                      Password
+                    </label>
+                    <input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="flex-1 px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 text-sm"
+                      placeholder="Enter password"
+                      required
+                    />
+                  </div>
+                </div>
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mt-4"
               >
                 {isLoading ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                     Signing in...
                   </>
                 ) : showSuccess ? (
                   <>
-                    <CheckCircle className="h-5 w-5 mr-2" />
+                    <CheckCircle className="h-4 w-4 mr-2" />
                     Success! Redirecting...
                   </>
                 ) : (
@@ -304,27 +308,25 @@ const Login = () => {
                       : loginType === "counsellor"
                       ? "Login as Counsellor"
                       : "Login as Admin"}
-                    <ArrowRight className="h-5 w-5 ml-2" />
+                    <ArrowRight className="h-4 w-4 ml-2" />
                   </>
                 )}
               </button>
             </form>
 
             {/* Guest Access */}
-            {loginType === "student" && (
-              <div className="mt-4 pt-4 border-t border-gray-200 animate-fade-in-up delay-300">
-                <p className="text-center text-xs text-gray-600 mb-3">
-                  Want to try without logging in?
-                </p>
-                <button
-                  onClick={handleGuestAccess}
-                  className="w-full bg-white/70 text-gray-700 py-2 px-3 rounded-lg hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center"
-                >
-                  <Users className="h-3 w-3 mr-2" />
-                  Access Chat Buddy (Guest Mode)
-                </button>
-              </div>
-            )}
+            <div className="mt-4 pt-3 border-t border-gray-200 animate-fade-in-up delay-300">
+              <p className="text-center text-xs text-gray-600 mb-3">
+                Want to try without logging in?
+              </p>
+              <button
+                onClick={handleGuestAccess}
+                className="w-full bg-white/80 text-gray-700 py-2 px-3 rounded-lg hover:bg-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 font-medium border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center"
+              >
+                <Users className="h-3 w-3 mr-2" />
+                Access Chat Buddy (Guest Mode)
+              </button>
+            </div>
           </div>
         </div>
       </div>

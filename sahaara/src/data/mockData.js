@@ -1,8 +1,12 @@
 // Mock data for the Sahaara app
 
 export const colleges = [
-  { id: 1, name: "Delhi University" },
-  { id: 2, name: "Mumbai University" },
+  {
+    id: 1,
+    name: "New Horizon College of Engineering",
+    logo:"nhce-logo.png",
+  },
+  { id: 2, name: "Delhi University" },
   { id: 3, name: "Bangalore University" },
   { id: 4, name: "Chennai University" },
   { id: 5, name: "Kolkata University" },

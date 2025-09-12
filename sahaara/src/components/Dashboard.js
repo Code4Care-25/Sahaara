@@ -16,11 +16,20 @@ import {
   Activity,
   Target,
   Award,
+  User,
+  Settings,
+  Bell,
+  HelpCircle,
+  Shield,
+  X,
+  ChevronRight,
 } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [stats, setStats] = useState({
     chatSessions: 0,
     appointments: 0,
@@ -71,6 +80,75 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+  const closeProfile = () => {
+    setIsProfileOpen(false);
+  };
+
+  const toggleNotifications = () => {
+    setIsNotificationOpen(!isNotificationOpen);
+  };
+
+  const closeNotifications = () => {
+    setIsNotificationOpen(false);
+  };
+
+  // Profile sidebar data
+  const profileFeatures = [
+    {
+      id: 1,
+      title: "Account Settings",
+      icon: Settings,
+      color: "text-gray-600",
+      bgColor: "bg-gray-50",
+      onClick: () => console.log("Account Settings clicked"),
+    },
+    {
+      id: 2,
+      title: "Notifications",
+      icon: Bell,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      onClick: () => console.log("Notifications clicked"),
+    },
+
+    {
+      id: 3,
+      title: "Help & Support",
+      icon: HelpCircle,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      onClick: () => console.log("Help clicked"),
+    },
+  ];
+
+  // Mock user data
+  const userProfile = {
+    name: "Ramesh",
+    email: "ramesh.doe@newhorizonindia.edu",
+    institution: "New Horizon College of Engineering",
+    studentId: "1NH23AI612",
+    joinDate: "January 2024",
+    avatar: null, // You can add avatar URL here
+  };
+
+  // User statistics data
+  const userStats = {
+    totalSessions: 12,
+    thisWeekSessions: 3,
+    totalAppointments: 3,
+    upcomingAppointments: 1,
+    journalEntries: 8,
+    thisWeekEntries: 2,
+    goalsCompleted: 5,
+    totalGoals: 8,
+    streakDays: 7,
+    lastActive: "2 hours ago",
+  };
+
   const dashboardCards = [
     {
       id: 1,
@@ -119,18 +197,6 @@ const Dashboard = () => {
       iconColor: "text-orange-600",
       onClick: () => navigate("/forum"),
       delay: "delay-300",
-    },
-    {
-      id: 5,
-      title: "Personal Journal",
-      description: "Record your thoughts & reflections",
-      icon: FileText,
-      gradient: "from-pink-500 to-pink-600",
-      hoverGradient: "from-pink-600 to-pink-700",
-      bgColor: "bg-pink-50",
-      iconColor: "text-pink-600",
-      onClick: () => navigate("/journal"),
-      delay: "delay-400",
     },
   ];
 
@@ -188,8 +254,9 @@ const Dashboard = () => {
 
       {/* Header */}
       <header className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
+            {/* Sahaara Logo - Leftmost */}
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-30"></div>
@@ -206,13 +273,29 @@ const Dashboard = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="group flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg"
-            >
-              <LogOut className="h-5 w-5 group-hover:scale-110 transition-transform" />
-              <span className="font-medium">Logout</span>
-            </button>
+
+            {/* Profile Button - Rightmost */}
+            <div className="flex items-center">
+              <button
+                onClick={toggleProfile}
+                className="group flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg"
+              >
+                <div className="relative">
+                  {userProfile.avatar ? (
+                    <img
+                      src={userProfile.avatar}
+                      alt="Profile"
+                      className="h-8 w-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                  )}
+                </div>
+                <span className="font-medium hidden sm:block">Profile</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -288,65 +371,6 @@ const Dashboard = () => {
           })}
         </div>
 
-        {/* Statistics Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20 hover:shadow-xl transition-all duration-300 animate-fade-in-up delay-500">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-xl">
-                <MessageCircle className="h-8 w-8 text-blue-600" />
-              </div>
-              <TrendingUp className="h-5 w-5 text-green-500" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                Chat Sessions
-              </p>
-              <p className="text-4xl font-bold text-gray-900">
-                {stats.chatSessions}
-              </p>
-              <p className="text-sm text-green-600 font-medium">+2 this week</p>
-            </div>
-          </div>
-
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20 hover:shadow-xl transition-all duration-300 animate-fade-in-up delay-700">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-emerald-100 rounded-xl">
-                <Calendar className="h-8 w-8 text-emerald-600" />
-              </div>
-              <Clock className="h-5 w-5 text-blue-500" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                Appointments
-              </p>
-              <p className="text-4xl font-bold text-gray-900">
-                {stats.appointments}
-              </p>
-              <p className="text-sm text-blue-600 font-medium">
-                Next: Tomorrow
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20 hover:shadow-xl transition-all duration-300 animate-fade-in-up delay-900">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-xl">
-                <FileText className="h-8 w-8 text-purple-600" />
-              </div>
-              <CheckCircle className="h-5 w-5 text-purple-500" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                Journal Entries
-              </p>
-              <p className="text-4xl font-bold text-gray-900">
-                {stats.journalEntries}
-              </p>
-              <p className="text-sm text-purple-600 font-medium">+1 today</p>
-            </div>
-          </div>
-        </div>
-
         {/* Quick Actions */}
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg p-8 border border-white/20 animate-fade-in-up delay-1000">
           <h3 className="text-2xl font-bold text-gray-900 mb-6">
@@ -414,6 +438,136 @@ const Dashboard = () => {
           opacity: 0;
         }
       `}</style>
+
+      {/* Profile Sidebar */}
+      {isProfileOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+            onClick={closeProfile}
+          ></div>
+
+          {/* Sidebar */}
+          <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-bold text-gray-900">Profile</h2>
+                <button
+                  onClick={closeProfile}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Profile Info */}
+              <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center space-x-3 mb-3">
+                  {userProfile.avatar ? (
+                    <img
+                      src={userProfile.avatar}
+                      alt="Profile"
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-12 w-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="h-6 w-6 text-white" />
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900">
+                      {userProfile.name}
+                    </h3>
+                    <p className="text-xs text-gray-500">{userProfile.email}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 bg-blue-50 rounded">
+                      <Shield className="h-3 w-3 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-900">
+                        {userProfile.institution}
+                      </p>
+                      <p className="text-xs text-gray-500">Institution</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 bg-green-50 rounded">
+                      <Award className="h-3 w-3 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-900">
+                        {userProfile.studentId}
+                      </p>
+                      <p className="text-xs text-gray-500">Student ID</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 bg-purple-50 rounded">
+                      <Calendar className="h-3 w-3 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-900">
+                        {userProfile.joinDate}
+                      </p>
+                      <p className="text-xs text-gray-500">Member since</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="flex-1 p-4">
+                <h3 className="text-base font-semibold text-gray-900 mb-3">
+                  Features & Settings
+                </h3>
+                <div className="space-y-2">
+                  {profileFeatures.map((feature) => {
+                    const IconComponent = feature.icon;
+                    return (
+                      <button
+                        key={feature.id}
+                        onClick={feature.onClick}
+                        className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 group"
+                      >
+                        <div className={`p-2 rounded ${feature.bgColor}`}>
+                          <IconComponent
+                            className={`h-4 w-4 ${feature.color}`}
+                          />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <h4 className="text-sm font-medium text-gray-900 group-hover:text-gray-800">
+                            {feature.title}
+                          </h4>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="p-6 border-t border-gray-200">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors duration-200"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span className="font-medium">Sign Out</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
