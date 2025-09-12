@@ -81,7 +81,7 @@ const Dashboard = () => {
       hoverGradient: "from-blue-600 to-blue-700",
       bgColor: "bg-blue-50",
       iconColor: "text-blue-600",
-      onClick: () => navigate("/chat"),
+      onClick: () => navigate("/chat", { state: { isGuest: false } }),
       delay: "delay-0",
     },
     {

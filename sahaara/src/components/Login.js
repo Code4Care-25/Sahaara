@@ -27,7 +27,7 @@ const Login = () => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Mock login - any credentials work for demo
-    if (selectedCollege && username && password) {
+    if (username && password && (loginType !== "student" || selectedCollege)) {
       setShowSuccess(true);
       setTimeout(() => {
         if (loginType === "counsellor") {
@@ -43,7 +43,7 @@ const Login = () => {
   };
 
   const handleGuestAccess = () => {
-    navigate("/chat");
+    navigate("/chat", { state: { isGuest: true } });
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   Send,
@@ -20,7 +20,11 @@ import {
 
 const ChatPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("clinical");
+  const location = useLocation();
+  const isGuestMode = location.state?.isGuest || false;
+  const [activeTab, setActiveTab] = useState(
+    isGuestMode ? "buddy" : "clinical"
+  );
   const [showScreening, setShowScreening] = useState(false);
   const [screeningType, setScreeningType] = useState("phq9");
   const [screeningAnswers, setScreeningAnswers] = useState({});
@@ -28,6 +32,7 @@ const ChatPage = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [selectedPersonality, setSelectedPersonality] = useState("motivator");
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [hasCompletedScreening, setHasCompletedScreening] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -79,6 +84,8 @@ const ChatPage = () => {
       }
 
       setShowScreening(false);
+      setHasCompletedScreening(true);
+      setActiveTab("clinical");
       setMessages([
         {
           id: 1,
@@ -272,25 +279,57 @@ const ChatPage = () => {
       <div className="relative bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="group flex items-center text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg px-4 py-2"
-            >
-              <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Dashboard
-            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate(isGuestMode ? "/" : "/dashboard")}
+                className="group flex items-center text-gray-600 hover:text-gray-900 transition-all duration-300 hover:bg-gray-100 rounded-lg px-4 py-2"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+                {isGuestMode ? "Back to Login" : "Back to Dashboard"}
+              </button>
+              {isGuestMode && (
+                <div className="flex items-center space-x-2 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                  <User className="h-4 w-4" />
+                  Guest Mode
+                </div>
+              )}
+            </div>
 
             <div className="flex space-x-1 bg-gray-100 rounded-2xl p-1">
-              <button
-                onClick={() => setActiveTab("clinical")}
-                className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                  activeTab === "clinical"
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
-                }`}
-              >
-                Clinical Chatbot
-              </button>
+              {!isGuestMode ? (
+                <button
+                  onClick={() => {
+                    if (!hasCompletedScreening) {
+                      handleScreeningStart("phq9");
+                    } else {
+                      setActiveTab("clinical");
+                    }
+                  }}
+                  className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                    activeTab === "clinical"
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                  }`}
+                >
+                  Clinical Chatbot
+                  {!hasCompletedScreening && (
+                    <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                      PHQ-9 Required
+                    </span>
+                  )}
+                </button>
+              ) : (
+                <div className="px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg flex items-center space-x-2">
+                  <Bot className="h-4 w-4" />
+                  <span>Clinical Support</span>
+                  <button
+                    onClick={() => navigate("/")}
+                    className="ml-2 text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded-full transition-colors"
+                  >
+                    Login Required
+                  </button>
+                </div>
+              )}
               <button
                 onClick={() => setActiveTab("friendly")}
                 className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
@@ -307,8 +346,8 @@ const ChatPage = () => {
       </div>
 
       {/* Chat Interface */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl h-[700px] flex flex-col border border-white/20 animate-fade-in-up">
+      <div className="max-w-4xl mx-auto px-4 py-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl h-[calc(100vh-200px)] flex flex-col border border-white/20 animate-fade-in-up">
           {/* Chat Header */}
           <div className="p-6 border-b border-gray-200/50">
             {activeTab === "clinical" ? (
@@ -367,9 +406,30 @@ const ChatPage = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[calc(100vh-400px)]">
             {messages.length === 0 ? (
-              <div className="text-center text-gray-500 mt-12">
+              <div className="text-center text-gray-500 mt-8">
+                {isGuestMode && (
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-6 mb-6">
+                    <div className="flex items-center justify-center mb-4">
+                      <Bot className="h-8 w-8 text-blue-600 mr-3" />
+                      <h4 className="text-xl font-bold text-gray-900">
+                        Want Clinical Support?
+                      </h4>
+                    </div>
+                    <p className="text-gray-700 mb-4">
+                      For personalized mental health support and clinical
+                      guidance, please log in to access our AI First-Aid
+                      Assistant.
+                    </p>
+                    <button
+                      onClick={() => navigate("/")}
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    >
+                      Login for Clinical Support
+                    </button>
+                  </div>
+                )}
                 <div className="mb-6">
                   <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <MessageCircle className="h-10 w-10 text-blue-600" />
@@ -442,22 +502,22 @@ const ChatPage = () => {
           </div>
 
           {/* Input */}
-          <div className="p-6 border-t border-gray-200/50">
-            <div className="flex space-x-4">
+          <div className="p-4 border-t border-gray-200/50">
+            <div className="flex space-x-3">
               <input
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 text-lg"
+                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim()}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 rounded-2xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-4 w-4" />
               </button>
             </div>
           </div>
