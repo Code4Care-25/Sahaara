@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Settings, ArrowLeft, Building2 } from "lucide-react";
 
 const SahaaraMainCover = () => {
-  const [selectedTheme, setSelectedTheme] = useState("default");
+  const [selectedTheme, setSelectedTheme] = useState("mother");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -12,38 +12,8 @@ const SahaaraMainCover = () => {
   const { selectedInstitution, loginType, username } = userData;
 
   const themes = {
-    default: {
-      name: "Default",
-      gradient: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-      primary: "#6366f1",
-      secondary: "#8b5cf6",
-      accent: "#06b6d4",
-      text: "#1f2937",
-      cardBg: "rgba(255, 255, 255, 0.9)",
-      buttonHover: "#4f46e5",
-    },
-    purpleHarmony: {
-      name: "Purple Harmony",
-      gradient: "linear-gradient(135deg, #faf5ff 0%, #e9d5ff 100%)",
-      primary: "#a855f7",
-      secondary: "#d946ef",
-      accent: "#c084fc",
-      text: "#4c1d95",
-      cardBg: "rgba(255, 255, 255, 0.9)",
-      buttonHover: "#9333ea",
-    },
-    oceanBreeze: {
-      name: "Ocean Breeze",
-      gradient: "linear-gradient(135deg, #f0fdff 0%, #cffafe 100%)",
-      primary: "#0891b2",
-      secondary: "#06b6d4",
-      accent: "#67e8f9",
-      text: "#0c4a6e",
-      cardBg: "rgba(255, 255, 255, 0.9)",
-      buttonHover: "#0e7490",
-    },
-    sunsetGlow: {
-      name: "Sunset Glow",
+    mother: {
+      name: "Mother",
       gradient: "linear-gradient(135deg, #fef7f0 0%, #fed7aa 100%)",
       primary: "#ea580c",
       secondary: "#f97316",
@@ -52,8 +22,18 @@ const SahaaraMainCover = () => {
       cardBg: "rgba(255, 255, 255, 0.9)",
       buttonHover: "#dc2626",
     },
-    forestCalm: {
-      name: "Forest Calm",
+    father: {
+      name: "Father",
+      gradient: "linear-gradient(135deg, #f0fdff 0%, #cffafe 100%)",
+      primary: "#0891b2",
+      secondary: "#06b6d4",
+      accent: "#67e8f9",
+      text: "#0c4a6e",
+      cardBg: "rgba(255, 255, 255, 0.9)",
+      buttonHover: "#0e7490",
+    },
+    friend: {
+      name: "Friend",
       gradient: "linear-gradient(135deg, #f7fdf7 0%, #d1fae5 100%)",
       primary: "#059669",
       secondary: "#10b981",
@@ -62,8 +42,28 @@ const SahaaraMainCover = () => {
       cardBg: "rgba(255, 255, 255, 0.9)",
       buttonHover: "#047857",
     },
-    midnightDream: {
-      name: "Midnight Dream",
+    relative: {
+      name: "Relative",
+      gradient: "linear-gradient(135deg, #faf5ff 0%, #e9d5ff 100%)",
+      primary: "#a855f7",
+      secondary: "#d946ef",
+      accent: "#c084fc",
+      text: "#4c1d95",
+      cardBg: "rgba(255, 255, 255, 0.9)",
+      buttonHover: "#9333ea",
+    },
+    mentor: {
+      name: "Mentor",
+      gradient: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+      primary: "#6366f1",
+      secondary: "#8b5cf6",
+      accent: "#06b6d4",
+      text: "#1f2937",
+      cardBg: "rgba(255, 255, 255, 0.9)",
+      buttonHover: "#4f46e5",
+    },
+    counselor: {
+      name: "Counselor",
       gradient: "linear-gradient(135deg, #faf5ff 0%, #e879f9 100%)",
       primary: "#c026d3",
       secondary: "#d946ef",
