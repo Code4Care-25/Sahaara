@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import InstitutionSelection from "./components/InstitutionSelection";
 import Login from "./components/Login";
+import SahaaraMainCover from "./components/themeselection";
 import Dashboard from "./components/Dashboard";
 import CounsellorPage from "./components/CounsellorPage";
 import AdminDashboard from "./components/AdminDashboard";
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<InstitutionSelection />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/theme-selection" element={<SahaaraMainCover />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/counsellor" element={<CounsellorPage />} />
           <Route path="/admin" element={<AdminDashboard />} />

@@ -56,8 +56,14 @@ const Login = () => {
             console.log("Navigating to admin page");
             navigate("/admin");
           } else {
-            console.log("Navigating to dashboard");
-            navigate("/dashboard");
+            console.log("Navigating to theme selection");
+            navigate("/theme-selection", {
+              state: {
+                selectedInstitution: selectedCollege,
+                loginType: loginType,
+                username: username,
+              },
+            });
           }
         } catch (error) {
           console.error("Navigation error:", error);
