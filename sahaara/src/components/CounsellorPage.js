@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Phone,
   Mail,
+  LogOut,
 } from "lucide-react";
 
 const CounsellorPage = () => {
@@ -87,6 +88,10 @@ const CounsellorPage = () => {
     alert(`Appointment ${appointmentId} rejected.`);
   };
 
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Animated Background Elements */}
@@ -116,7 +121,13 @@ const CounsellorPage = () => {
                 <p className="text-gray-600 font-medium">Dr. Priya Sharma</p>
               </div>
             </div>
-            <div className="w-24"></div>
+            <button
+              onClick={handleLogout}
+              className="group flex items-center text-red-600 hover:text-red-900 transition-all duration-300 hover:bg-red-100 rounded-lg px-4 py-2"
+            >
+              <LogOut className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+              Logout
+            </button>
           </div>
         </div>
       </div>
