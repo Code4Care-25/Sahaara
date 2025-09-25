@@ -1,122 +1,42 @@
-# Sahaara Backend - Clean Implementation
+# Sahaara Backend
 
-A comprehensive backend implementation for Sahaara, a student mental health support platform. This clean backend provides all the necessary APIs and services to support the frontend application.
+A comprehensive backend API for the Sahaara mental health support platform built with Node.js, Express.js, and MongoDB.
 
 ## 🚀 Features
 
-### Core Features
+- **🔐 User Authentication**: Secure JWT-based authentication for students and counsellors
+- **💬 Chat System**: AI-powered chat sessions with different personality types
+- **📅 Appointment Booking**: Schedule and manage counselling appointments
+- **📚 Resource Hub**: Mental health resources, articles, and exercises
+- **👥 Peer Support Forum**: Anonymous forum for peer support and discussions
+- **🍽️ Meal Monitoring**: Track meals, mood, and wellness patterns
+- **📖 Personal Journal**: Private journaling with mood tracking
+- **👨‍💼 Admin Dashboard**: Administrative tools and analytics
+- **👩‍⚕️ Counsellor Portal**: Professional counsellor management system
+- **📊 Analytics**: Comprehensive analytics and reporting
+- **🔔 Notification System**: Email and push notifications
+- **🔒 Privacy & Security**: Data encryption and anonymization
 
-- **User Authentication & Management**
+## 🛠️ Tech Stack
 
-  - User registration and login
-  - Email verification
-  - Password reset functionality
-  - JWT-based authentication
-  - User profile management
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM for MongoDB
+- **JWT** - Authentication
+- **bcrypt** - Password hashing
+- **express-validator** - Input validation
+- **Helmet** - Security middleware
+- **CORS** - Cross-origin resource sharing
+- **Morgan** - HTTP request logger
 
-- **Counsellor Management**
-
-  - Counsellor registration and verification
-  - Professional profile management
-  - Availability and scheduling
-
-- **AI Chat System**
-
-  - Multiple personality types (Motivator, Listener, Chill)
-  - Mental health screening tools (PHQ-9, GAD-7)
-  - Conversation history and analytics
-  - Risk assessment and flagging
-
-- **Appointment Booking**
-
-  - Real-time availability checking
-  - Appointment scheduling and management
-  - Payment integration
-  - Rescheduling and cancellation
-
-- **Resource Hub**
-
-  - Articles, videos, and audio content
-  - Multi-language support
-  - Content categorization and tagging
-  - User engagement tracking
-
-- **Peer Support Forum**
-
-  - Anonymous posting and replies
-  - Content moderation
-  - Community guidelines enforcement
-  - Topic categorization
-
-- **Personal Journal**
-
-  - Private journaling with mood tracking
-  - Wellness metrics monitoring
-  - Goal setting and tracking
-  - Gratitude logging
-
-- **Meal Monitoring**
-
-  - Food intake tracking
-  - Nutritional analysis
-  - Eating behavior assessment
-  - Wellness correlation
-
-- **Analytics & Reporting**
-
-  - User engagement metrics
-  - Wellness trend analysis
-  - Platform usage statistics
-  - Risk assessment reports
-
-- **Admin Dashboard**
-  - User management
-  - Content moderation
-  - System analytics
-  - Counsellor verification
-
-## 🏗️ Architecture
-
-### Project Structure
-
-```
-backend-clean/
-├── config/           # Database and app configuration
-├── controllers/      # Route controllers
-├── middleware/       # Custom middleware
-├── models/          # MongoDB models
-├── routes/          # API routes
-├── services/        # Business logic services
-├── utils/           # Utility functions
-├── validators/      # Input validation
-├── server.js        # Main application file
-└── package.json     # Dependencies
-```
-
-### Technology Stack
-
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JWT (JSON Web Tokens)
-- **Email**: Nodemailer
-- **Security**: Helmet, CORS, Rate Limiting
-- **Validation**: Express-validator
-- **File Upload**: Multer
-
-## 📋 Prerequisites
-
-- Node.js (v16 or higher)
-- MongoDB (v4.4 or higher)
-- npm or yarn
-
-## 🛠️ Installation
+## ⚡ Quick Start
 
 1. **Clone the repository**
 
    ```bash
    git clone <repository-url>
-   cd sahaara/backend-clean
+   cd sahaara/backend
    ```
 
 2. **Install dependencies**
@@ -125,464 +45,297 @@ backend-clean/
    npm install
    ```
 
-3. **Environment Setup**
+3. **Set up environment variables**
 
    ```bash
    cp env.example .env
+   # Edit .env with your configuration
    ```
 
-   Update the `.env` file with your configuration:
-
-   ```env
-   # Database Configuration
-   MONGODB_URI=mongodb://localhost:27017/sahaara
-   MONGODB_TEST_URI=mongodb://localhost:27017/sahaara_test
-
-   # Server Configuration
-   PORT=5000
-   NODE_ENV=development
-
-   # JWT Configuration
-   JWT_SECRET=your-super-secret-jwt-key-here
-   JWT_EXPIRE=7d
-   JWT_REFRESH_SECRET=your-refresh-secret-key-here
-   JWT_REFRESH_EXPIRE=30d
-
-   # Email Configuration
-   EMAIL_HOST=smtp.gmail.com
-   EMAIL_PORT=587
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-app-password
-
-   # AI Chat Configuration
-   OPENAI_API_KEY=your-openai-api-key-here
-
-   # Privacy & Security
-   ENCRYPTION_KEY=your-32-character-encryption-key
-   ANONYMIZATION_ENABLED=true
-   ```
-
-4. **Start the server**
-
+4. **Start the development server**
    ```bash
-   # Development mode
    npm run dev
-
-   # Production mode
-   npm start
    ```
 
-## 📚 API Documentation
+The server will start on `http://localhost:5000`
 
-### Authentication Endpoints
+## 🔧 Environment Variables
 
-#### User Registration
+Create a `.env` file in the backend directory with the following variables:
 
-```http
-POST /api/auth/register
-Content-Type: application/json
+```env
+# Server Configuration
+NODE_ENV=development
+PORT=5000
 
-{
-  "username": "johndoe",
-  "email": "john@example.com",
-  "password": "securePassword123",
-  "firstName": "John",
-  "lastName": "Doe",
-  "dateOfBirth": "2000-01-01",
-  "gender": "male",
-  "institution": "institution_id",
-  "department": "department_id",
-  "academicYear": "3rd",
-  "studentId": "STU123456"
-}
+# Database
+MONGODB_URI=mongodb://localhost:27017/sahaara
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this-in-production
+JWT_EXPIRES_IN=24h
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_FROM=noreply@sahaara.com
+
+# Frontend URL
+FRONTEND_URL=http://localhost:3000
+
+# File Upload
+MAX_FILE_SIZE=10485760
+UPLOAD_PATH=./uploads
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Security
+BCRYPT_ROUNDS=12
+SESSION_SECRET=your-session-secret-change-this-in-production
 ```
 
-#### User Login
+## 📡 API Endpoints
 
-```http
-POST /api/auth/login
-Content-Type: application/json
+### 🔐 Authentication
 
-{
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-```
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/counsellor/register` - Counsellor registration
+- `POST /api/auth/counsellor/login` - Counsellor login
+- `POST /api/auth/refresh` - Refresh access token
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/institutions` - Get institutions
+- `GET /api/auth/departments/:institutionId` - Get departments
 
-#### Password Reset
+### 👤 Users
 
-```http
-POST /api/auth/forgot-password
-Content-Type: application/json
+- `GET /api/users/profile` - Get user profile
+- `PUT /api/users/profile` - Update user profile
+- `PUT /api/users/change-password` - Change password
+- `GET /api/users/wellness-profile` - Get wellness profile
+- `PUT /api/users/wellness-profile` - Update wellness profile
+- `POST /api/users/wellness-checkin` - Wellness check-in
+- `GET /api/users/activity-summary` - Get activity summary
+- `GET /api/users/statistics` - Get user statistics
+- `DELETE /api/users/account` - Delete account
 
-{
-  "email": "john@example.com"
-}
-```
+### 💬 Chat
 
-### User Management Endpoints
+- `POST /api/chat/sessions` - Create chat session
+- `GET /api/chat/sessions` - Get user's chat sessions
+- `GET /api/chat/sessions/:id` - Get specific chat session
+- `POST /api/chat/sessions/:id/messages` - Send message
+- `PUT /api/chat/sessions/:id/complete` - Complete chat session
+- `PUT /api/chat/sessions/:id/flag` - Flag chat session
+- `GET /api/chat/analytics` - Get chat analytics
 
-#### Get User Profile
+### 📅 Appointments
 
-```http
-GET /api/users/profile
-Authorization: Bearer <token>
-```
+- `GET /api/appointments` - Get user's appointments
+- `POST /api/appointments` - Book appointment
+- `GET /api/appointments/:id` - Get specific appointment
+- `PUT /api/appointments/:id` - Update appointment
+- `DELETE /api/appointments/:id` - Cancel appointment
+- `GET /api/appointments/stats/overview` - Get appointment statistics
 
-#### Update Profile
+### 📚 Resources
 
-```http
-PUT /api/users/profile
-Authorization: Bearer <token>
-Content-Type: application/json
+- `GET /api/resources` - Get resources
+- `GET /api/resources/:id` - Get specific resource
+- `POST /api/resources/:id/view` - Track resource view
+- `POST /api/resources/:id/like` - Like/unlike resource
+- `POST /api/resources/:id/rating` - Rate resource
+- `POST /api/resources/:id/share` - Share resource
+- `POST /api/resources/:id/complete` - Mark resource as completed
+- `GET /api/resources/categories` - Get resource categories
+- `GET /api/resources/tags` - Get resource tags
+- `GET /api/resources/featured` - Get featured resources
+- `GET /api/resources/recommendations/personalized` - Get personalized recommendations
+- `GET /api/resources/search/advanced` - Advanced resource search
 
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "phoneNumber": "+1234567890",
-  "preferences": {
-    "theme": "mother",
-    "language": "en",
-    "notifications": {
-      "email": true,
-      "push": true,
-      "sms": false
-    }
-  }
-}
-```
+### 👩‍⚕️ Counsellors
 
-#### Wellness Check-in
+- `GET /api/counsellors` - Get counsellors
+- `GET /api/counsellors/:id` - Get specific counsellor
+- `GET /api/counsellors/specializations` - Get specializations
+- `POST /api/counsellors/:id/review` - Add counsellor review
 
-```http
-POST /api/users/wellness-checkin
-Authorization: Bearer <token>
-Content-Type: application/json
+### 👥 Forum
 
-{
-  "mood": "happy",
-  "energy": 8,
-  "stress": 3,
-  "sleep": 7,
-  "social": 6,
-  "academic": 7,
-  "physical": 8,
-  "notes": "Feeling good today!"
-}
-```
+- `GET /api/forum/posts` - Get forum posts
+- `POST /api/forum/posts` - Create forum post
+- `GET /api/forum/posts/:id` - Get specific post
+- `PUT /api/forum/posts/:id` - Update post
+- `DELETE /api/forum/posts/:id` - Delete post
+- `POST /api/forum/posts/:id/like` - Like/unlike post
+- `POST /api/forum/posts/:id/reply` - Reply to post
+- `GET /api/forum/categories` - Get forum categories
+- `GET /api/forum/my/posts` - Get user's posts
+- `GET /api/forum/my/replies` - Get user's replies
 
-### Chat System Endpoints
+### 📖 Journal
 
-#### Start Chat Session
+- `GET /api/journal/entries` - Get journal entries
+- `POST /api/journal/entries` - Create journal entry
+- `GET /api/journal/entries/:id` - Get specific entry
+- `PUT /api/journal/entries/:id` - Update entry
+- `DELETE /api/journal/entries/:id` - Delete entry
+- `GET /api/journal/analytics` - Get journal analytics
 
-```http
-POST /api/chat/sessions
-Authorization: Bearer <token>
-Content-Type: application/json
+### 🍽️ Meal Monitoring
 
-{
-  "personality": "listener",
-  "title": "Daily Check-in"
-}
-```
+- `GET /api/meal-monitoring/entries` - Get meal entries
+- `POST /api/meal-monitoring/entries` - Create meal entry
+- `GET /api/meal-monitoring/entries/:id` - Get specific entry
+- `PUT /api/meal-monitoring/entries/:id` - Update entry
+- `DELETE /api/meal-monitoring/entries/:id` - Delete entry
+- `GET /api/meal-monitoring/analytics` - Get meal analytics
 
-#### Send Message
+## 🗄️ Database Models
 
-```http
-POST /api/chat/sessions/:sessionId/messages
-Authorization: Bearer <token>
-Content-Type: application/json
+### User
 
-{
-  "content": "I'm feeling anxious about my exams",
-  "personality": "listener"
-}
-```
+- Personal information (name, email, phone)
+- Academic information (institution, department, year)
+- Wellness profile (mood, energy, stress, sleep, social)
+- Preferences and settings
 
-#### Complete Screening
+### Counsellor
 
-```http
-POST /api/chat/sessions/:sessionId/screening
-Authorization: Bearer <token>
-Content-Type: application/json
+- Professional information (specialization, credentials, bio)
+- Availability and working hours
+- Ratings and reviews
+- Verification status
 
-{
-  "type": "phq9",
-  "answers": [
-    {"question": "Little interest or pleasure in doing things", "answer": 2},
-    {"question": "Feeling down, depressed, or hopeless", "answer": 1}
-  ]
-}
-```
+### ChatSession
 
-### Appointment Endpoints
+- User and session information
+- Messages with timestamps
+- Analytics and metadata
+- Completion and flagging status
 
-#### Book Appointment
+### Resource
 
-```http
-POST /api/appointments
-Authorization: Bearer <token>
-Content-Type: application/json
+- Content information (title, description, content)
+- Categories and tags
+- Engagement metrics (views, likes, ratings)
+- Author and publication details
 
-{
-  "counsellorId": "counsellor_id",
-  "date": "2024-01-15",
-  "time": "10:00",
-  "type": "individual",
-  "mode": "online"
-}
-```
+### Appointment
 
-#### Get Appointments
+- User and counsellor information
+- Date, time, and type
+- Status and notes
+- Feedback and ratings
 
-```http
-GET /api/appointments
-Authorization: Bearer <token>
-```
+### ForumPost
 
-#### Cancel Appointment
+- Content and metadata
+- Categories and tags
+- Engagement metrics
+- Replies and moderation
 
-```http
-PUT /api/appointments/:appointmentId/cancel
-Authorization: Bearer <token>
-Content-Type: application/json
+### JournalEntry
 
-{
-  "reason": "Schedule conflict"
-}
-```
+- Personal content and mood
+- Tags and privacy settings
+- Analytics and insights
 
-### Resource Endpoints
+### MealMonitoring
 
-#### Get Resources
-
-```http
-GET /api/resources?category=mental_health&type=article&limit=10&page=1
-Authorization: Bearer <token>
-```
-
-#### Get Resource Details
-
-```http
-GET /api/resources/:resourceId
-Authorization: Bearer <token>
-```
-
-#### Rate Resource
-
-```http
-POST /api/resources/:resourceId/rate
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "rating": 5,
-  "feedback": "Very helpful article!"
-}
-```
-
-### Forum Endpoints
-
-#### Create Post
-
-```http
-POST /api/forum/posts
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "title": "Feeling overwhelmed with studies",
-  "content": "I have multiple assignments due and I'm feeling stressed...",
-  "category": "academic_performance",
-  "tags": ["stress", "academic"],
-  "privacy": {
-    "isAnonymous": true
-  }
-}
-```
-
-#### Get Posts
-
-```http
-GET /api/forum/posts?category=mental_health&limit=20&page=1
-Authorization: Bearer <token>
-```
-
-#### Reply to Post
-
-```http
-POST /api/forum/posts/:postId/replies
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "content": "I understand how you feel. Have you tried breaking down your tasks into smaller chunks?"
-}
-```
-
-### Journal Endpoints
-
-#### Create Journal Entry
-
-```http
-POST /api/journal/entries
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "title": "Reflecting on today",
-  "content": "Today was a productive day...",
-  "mood": "happy",
-  "emotions": ["grateful", "motivated"],
-  "wellnessMetrics": {
-    "energy": 8,
-    "stress": 3,
-    "sleep": 7
-  },
-  "category": "daily_reflection"
-}
-```
-
-#### Get Journal Entries
-
-```http
-GET /api/journal/entries?startDate=2024-01-01&endDate=2024-01-31
-Authorization: Bearer <token>
-```
-
-### Meal Monitoring Endpoints
-
-#### Log Meal
-
-```http
-POST /api/meal-monitoring/entries
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "mealType": "lunch",
-  "mealTime": "2024-01-15T12:00:00Z",
-  "mealQuality": "good",
-  "portionSize": "appropriate",
-  "foodItems": [
-    {
-      "name": "Grilled Chicken",
-      "quantity": "150g",
-      "calories": 250,
-      "category": "protein"
-    }
-  ],
-  "context": {
-    "location": "cafeteria",
-    "company": "friends",
-    "mood": "happy",
-    "hungerLevel": 7
-  }
-}
-```
-
-#### Get Meal Summary
-
-```http
-GET /api/meal-monitoring/summary?date=2024-01-15
-Authorization: Bearer <token>
-```
+- Meal details and nutrition
+- Mood and wellness tracking
+- Analytics and patterns
 
 ## 🔒 Security Features
 
 - **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: bcrypt for secure password storage
-- **Rate Limiting**: Protection against brute force attacks
-- **Input Validation**: Comprehensive request validation
-- **CORS Protection**: Cross-origin request security
-- **Helmet Security**: HTTP header security
-- **Data Encryption**: Sensitive data encryption
-- **Anonymization**: User data anonymization for privacy
+- **Password Hashing**: bcrypt with configurable rounds
+- **Input Validation**: Comprehensive validation using express-validator
+- **Rate Limiting**: Protection against abuse and brute force attacks
+- **CORS Configuration**: Secure cross-origin resource sharing
+- **Helmet Security**: Security headers and protection
+- **Data Encryption**: Sensitive data encryption and anonymization
+- **Access Control**: Role-based access control (RBAC)
 
-## 📊 Database Models
+## ❌ Error Handling
 
-### Core Models
+The API uses consistent error response format:
 
-- **User**: Student user profiles and preferences
-- **Counsellor**: Professional counsellor profiles
-- **Institution**: Educational institutions
-- **Department**: Academic departments
-- **ChatSession**: AI chat conversations
-- **Appointment**: Counselling appointments
-- **Resource**: Educational content
-- **ForumPost**: Community discussions
-- **JournalEntry**: Personal journal entries
-- **MealMonitoring**: Meal tracking data
+```json
+{
+  "success": false,
+  "error": {
+    "message": "Error description",
+    "details": "Additional error details"
+  }
+}
+```
 
-### Key Features
+## 🚦 Rate Limiting
 
-- **Indexing**: Optimized database queries
-- **Validation**: Data integrity enforcement
-- **Relationships**: Proper model associations
-- **Virtual Fields**: Computed properties
-- **Middleware**: Pre/post processing hooks
-- **Methods**: Custom model methods
+- **General API**: 100 requests per 15 minutes
+- **Authentication**: 5 attempts per 15 minutes
+- **Sensitive Operations**: 5 attempts per 15 minutes
+
+## 🛠️ Development
+
+### Scripts
+
+- `npm start` - Start production server
+- `npm run dev` - Start development server with nodemon
+- `npm test` - Run tests
+- `npm run lint` - Run ESLint
+
+### Project Structure
+
+```
+backend/
+├── config/          # Configuration files
+├── controllers/     # Route controllers
+├── middleware/      # Custom middleware
+├── models/          # Database models
+├── routes/          # API routes
+├── services/        # Business logic services
+├── utils/           # Utility functions
+├── validators/      # Input validators
+├── server.js        # Main server file
+└── package.json     # Dependencies and scripts
+```
 
 ## 🧪 Testing
 
+Run the test suite:
+
 ```bash
-# Run tests
 npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run specific test file
-npm test -- --grep "User Authentication"
 ```
 
 ## 🚀 Deployment
 
-### Production Setup
-
-1. **Environment Configuration**
+1. **Production Environment**
 
    ```bash
-   NODE_ENV=production
-   MONGODB_URI=mongodb://your-production-db
-   JWT_SECRET=your-production-secret
+   NODE_ENV=production npm start
    ```
 
-2. **Build and Start**
+2. **Docker Deployment**
 
    ```bash
-   npm install --production
-   npm start
+   docker build -t sahaara-backend .
+   docker run -p 5000:5000 sahaara-backend
    ```
 
-3. **Process Management**
-   ```bash
-   # Using PM2
-   npm install -g pm2
-   pm2 start server.js --name sahaara-backend
-   pm2 startup
-   pm2 save
-   ```
-
-### Docker Deployment
-
-```dockerfile
-FROM node:16-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --production
-COPY . .
-EXPOSE 5000
-CMD ["npm", "start"]
-```
-
-## 📈 Monitoring & Analytics
-
-- **Health Checks**: `/health` endpoint for monitoring
-- **Error Logging**: Comprehensive error tracking
-- **Performance Metrics**: Response time monitoring
-- **User Analytics**: Engagement and usage tracking
-- **Wellness Trends**: Mental health pattern analysis
+3. **Environment Variables**
+   - Set all required environment variables
+   - Use secure, production-ready values
+   - Enable SSL/TLS in production
 
 ## 🤝 Contributing
 
@@ -594,7 +347,7 @@ CMD ["npm", "start"]
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ## 🆘 Support
 
@@ -604,14 +357,39 @@ For support and questions:
 - Contact the development team
 - Check the documentation
 
-## 🔄 Version History
+## 🔑 Sample Credentials
 
-- **v1.0.0**: Initial clean backend implementation
-  - Complete authentication system
-  - All core features implemented
-  - Comprehensive API documentation
-  - Security and privacy features
+### Test User
 
----
+- **Email**: test@example.com
+- **Password**: Test123!
 
-**Sahaara Backend** - Empowering student mental health through technology.
+### Test Counsellor
+
+- **Email**: counsellor@example.com
+- **Password**: Counsellor123!
+
+## 📚 API Documentation
+
+For detailed API documentation, visit:
+
+- Swagger UI: `http://localhost:5000/api-docs`
+- Postman Collection: Available in `/docs` folder
+
+## 🎯 Demo Ready Features
+
+The backend is fully configured for demonstration with:
+
+✅ **Complete Authentication System**
+✅ **User Management & Profiles**
+✅ **AI Chat System with Multiple Personalities**
+✅ **Appointment Booking System**
+✅ **Resource Management & Recommendations**
+✅ **Peer Support Forum**
+✅ **Personal Journaling**
+✅ **Meal Monitoring & Analytics**
+✅ **Counsellor Management**
+✅ **Comprehensive Analytics**
+✅ **Security & Privacy Features**
+
+Perfect for showcasing the full capabilities of the Sahaara platform! 🌟
