@@ -2,11 +2,30 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Counsellor = require('../models/Counsellor');
 
-// Authenticate user token
+// Generate JWT token
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || 'fallback-secret', {
+    expiresIn: process.env.JWT_EXPIRES_IN || '24h'
+  });
+};
+
+// Generate refresh token
+const generateRefreshToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret', {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d'
+  });
+};
+
+// Verify refresh token
+const verifyRefreshToken = (token) => {
+  return jwt.verify(token, process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret');
+};
+
+// Authenticate JWT token
 const authenticateToken = async (req, res, next) => {
   try {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) {
       return res.status(401).json({
@@ -15,44 +34,37 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: { message: 'Invalid token' }
+        error: { message: 'Invalid token - user not found' }
       });
     }
 
     req.user = user;
     next();
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        success: false,
-        error: { message: 'Invalid token' }
-      });
-    }
-    
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
         error: { message: 'Token expired' }
       });
     }
-
-    res.status(500).json({
+    
+    return res.status(403).json({
       success: false,
-      error: { message: 'Authentication error' }
+      error: { message: 'Invalid token' }
     });
   }
 };
 
-// Authenticate counsellor token
+// Authenticate counsellor
 const authenticateCounsellor = async (req, res, next) => {
   try {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
@@ -62,36 +74,31 @@ const authenticateCounsellor = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const counsellor = await Counsellor.findById(decoded.counsellorId).select('-password');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    const user = await User.findById(decoded.userId).select('-password');
     
-    if (!counsellor) {
-      return res.status(401).json({
+    if (!user || user.role !== 'counsellor') {
+      return res.status(403).json({
         success: false,
-        error: { message: 'Invalid token' }
+        error: { message: 'Counsellor access required' }
       });
     }
 
+    const counsellor = await Counsellor.findOne({ userId: user._id });
+    if (!counsellor || !counsellor.isActive) {
+      return res.status(403).json({
+        success: false,
+        error: { message: 'Counsellor profile not active' }
+      });
+    }
+
+    req.user = user;
     req.counsellor = counsellor;
     next();
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        success: false,
-        error: { message: 'Invalid token' }
-      });
-    }
-    
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        success: false,
-        error: { message: 'Token expired' }
-      });
-    }
-
-    res.status(500).json({
+    return res.status(403).json({
       success: false,
-      error: { message: 'Authentication error' }
+      error: { message: 'Invalid counsellor token' }
     });
   }
 };
@@ -120,23 +127,21 @@ const requireCounsellor = (req, res, next) => {
   }
 };
 
-// Optional authentication (for public endpoints that can benefit from user context)
+// Optional authentication (for public endpoints)
 const optionalAuth = async (req, res, next) => {
   try {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
 
     if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
       const user = await User.findById(decoded.userId).select('-password');
-      if (user) {
-        req.user = user;
-      }
+      req.user = user;
     }
     
     next();
   } catch (error) {
-    // Ignore authentication errors for optional auth
+    // Continue without authentication for optional auth
     next();
   }
 };
@@ -144,14 +149,18 @@ const optionalAuth = async (req, res, next) => {
 // Check ownership of resource
 const checkOwnership = (resourceUserIdField = 'userId') => {
   return (req, res, next) => {
-    const resourceUserId = req.resource?.[resourceUserIdField] || req.params.userId;
+    if (req.user.role === 'admin') {
+      return next(); // Admin can access everything
+    }
+
+    const resourceUserId = req.resource ? req.resource[resourceUserIdField] : req.params.userId;
     
-    if (req.user && req.user._id.toString() === resourceUserId.toString()) {
+    if (req.user._id.toString() === resourceUserId.toString()) {
       next();
     } else {
       res.status(403).json({
         success: false,
-        error: { message: 'Access denied' }
+        error: { message: 'Access denied - resource ownership required' }
       });
     }
   };
@@ -160,61 +169,42 @@ const checkOwnership = (resourceUserIdField = 'userId') => {
 // Rate limiting for sensitive operations
 const sensitiveOperationLimit = (maxAttempts = 5, windowMs = 15 * 60 * 1000) => {
   const attempts = new Map();
-  
+
   return (req, res, next) => {
-    const key = req.ip + ':' + req.user?._id;
+    const key = req.ip + req.user._id;
     const now = Date.now();
-    const windowStart = now - windowMs;
-    
-    // Clean old attempts
-    if (attempts.has(key)) {
-      const userAttempts = attempts.get(key).filter(time => time > windowStart);
-      attempts.set(key, userAttempts);
-    } else {
-      attempts.set(key, []);
+    const userAttempts = attempts.get(key) || { count: 0, resetTime: now + windowMs };
+
+    if (now > userAttempts.resetTime) {
+      userAttempts.count = 0;
+      userAttempts.resetTime = now + windowMs;
     }
-    
-    const userAttempts = attempts.get(key);
-    
-    if (userAttempts.length >= maxAttempts) {
+
+    if (userAttempts.count >= maxAttempts) {
       return res.status(429).json({
         success: false,
         error: { 
           message: 'Too many attempts. Please try again later.',
-          retryAfter: Math.ceil(windowMs / 1000)
+          retryAfter: Math.ceil((userAttempts.resetTime - now) / 1000)
         }
       });
     }
-    
-    userAttempts.push(now);
+
+    userAttempts.count++;
+    attempts.set(key, userAttempts);
     next();
   };
 };
 
-// Generate JWT token
-const generateToken = (payload, expiresIn = '24h') => {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
-};
-
-// Generate refresh token
-const generateRefreshToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
-};
-
-// Verify refresh token
-const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-};
-
 module.exports = {
+  generateToken,
+  generateRefreshToken,
+  verifyRefreshToken,
   authenticateToken,
   authenticateCounsellor,
   requireAdmin,
   requireCounsellor,
   optionalAuth,
   checkOwnership,
-  sensitiveOperationLimit,
-  generateToken,
-  generateRefreshToken,
-  verifyRefreshToken
+  sensitiveOperationLimit
 };

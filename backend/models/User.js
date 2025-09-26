@@ -25,60 +25,40 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     institution: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Institution",
+      type: String,
+      required: true,
     },
     department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Department",
+      type: String,
+      required: true,
     },
     academicYear: {
       type: String,
-      enum: ["1st", "2nd", "3rd", "4th", "PG", "PhD"],
+      required: true,
+    },
+    profilePicture: {
+      type: String,
+      default: "/images/default-avatar.jpg",
     },
     role: {
       type: String,
       enum: ["student", "counsellor", "admin"],
       default: "student",
     },
-    profilePicture: {
-      type: String,
-      default: "/images/default-avatar.jpg",
-    },
-    isVerified: {
+    isEmailVerified: {
       type: Boolean,
       default: false,
     },
-    lastLogin: {
-      type: Date,
-    },
-    wellnessProfile: {
-      mood: {
-        type: String,
-        enum: ["happy", "neutral", "sad", "anxious", "stressed"],
-      },
-      energy: {
-        type: Number,
-        min: 1,
-        max: 10,
-      },
-      stress: {
-        type: Number,
-        min: 1,
-        max: 10,
-      },
-      sleep: {
-        type: Number,
-        min: 1,
-        max: 10,
-      },
-      social: {
-        type: Number,
-        min: 1,
-        max: 10,
-      },
-    },
+    emailVerificationToken: String,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    lastLogin: Date,
     preferences: {
+      theme: {
+        type: String,
+        enum: ["light", "dark"],
+        default: "light",
+      },
       notifications: {
         email: { type: Boolean, default: true },
         push: { type: Boolean, default: true },
@@ -90,8 +70,23 @@ const userSchema = new mongoose.Schema(
           enum: ["public", "private"],
           default: "private",
         },
-        dataSharing: { type: Boolean, default: false },
+        allowMessages: { type: Boolean, default: true },
       },
+    },
+    wellnessProfile: {
+      currentMood: String,
+      stressLevel: Number,
+      sleepQuality: Number,
+      energyLevel: Number,
+      socialActivity: Number,
+      lastCheckIn: Date,
+    },
+    statistics: {
+      totalChatSessions: { type: Number, default: 0 },
+      totalAppointments: { type: Number, default: 0 },
+      totalJournalEntries: { type: Number, default: 0 },
+      totalMealEntries: { type: Number, default: 0 },
+      totalResourcesViewed: { type: Number, default: 0 },
     },
   },
   {
@@ -99,28 +94,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Indexes
+// Index for better query performance
 userSchema.index({ email: 1 });
-userSchema.index({ institution: 1 });
-userSchema.index({ role: 1 });
+userSchema.index({ institution: 1, department: 1 });
 
-// Virtual for user's full profile
-userSchema.virtual("fullProfile").get(function () {
-  return {
-    id: this._id,
-    name: this.name,
-    email: this.email,
-    role: this.role,
-    institution: this.institution,
-    department: this.department,
-    academicYear: this.academicYear,
-    profilePicture: this.profilePicture,
-    isVerified: this.isVerified,
-    lastLogin: this.lastLogin,
-  };
-});
-
-// Pre-save middleware to hash password
+// Hash password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
@@ -133,38 +111,24 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-// Method to compare password
+// Compare password method
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Method to get public profile
+// Get public profile (without sensitive data)
 userSchema.methods.getPublicProfile = function () {
-  return {
-    id: this._id,
-    name: this.name,
-    profilePicture: this.profilePicture,
-    role: this.role,
-    institution: this.institution,
-    department: this.department,
-    academicYear: this.academicYear,
-  };
+  const userObject = this.toObject();
+  delete userObject.password;
+  delete userObject.emailVerificationToken;
+  delete userObject.passwordResetToken;
+  delete userObject.passwordResetExpires;
+  return userObject;
 };
 
-// Method to update wellness profile
-userSchema.methods.updateWellnessProfile = function (wellnessData) {
-  this.wellnessProfile = { ...this.wellnessProfile, ...wellnessData };
-  return this.save();
-};
-
-// Method to check if user needs wellness check-in
-userSchema.methods.needsWellnessCheckin = function () {
-  const lastCheckin = this.wellnessProfile?.lastUpdated;
-  if (!lastCheckin) return true;
-
-  const daysSinceCheckin =
-    (Date.now() - new Date(lastCheckin)) / (1000 * 60 * 60 * 24);
-  return daysSinceCheckin >= 1; // Check-in needed if more than 1 day
-};
+// Virtual for full name
+userSchema.virtual("fullName").get(function () {
+  return this.name;
+});
 
 module.exports = mongoose.model("User", userSchema);
