@@ -10,6 +10,9 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const chatRoutes = require("./routes/chat");
 
+// Import middleware
+const { generalLimiter } = require("./middleware/rateLimiting");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -33,6 +36,9 @@ app.use(
 app.use(morgan("combined"));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+// Apply rate limiting
+app.use(generalLimiter);
 
 // Health check route
 app.get("/health", (req, res) => {
@@ -68,93 +74,6 @@ app.get("/api", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
-
-// Auth routes (minimal)
-app.post("/api/auth/login", (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      error: { message: "Email and password are required" },
-    });
-  }
-
-  // Mock authentication - replace with real auth logic
-  if (email === "test@sahaara.com" && password === "password") {
-    res.json({
-      success: true,
-      data: {
-        user: {
-          id: "1",
-          email: email,
-          name: "Test User",
-          role: "student",
-        },
-        token: "mock-jwt-token-" + Date.now(),
-      },
-      message: "Login successful",
-    });
-  } else {
-    res.status(401).json({
-      success: false,
-      error: { message: "Invalid credentials" },
-    });
-  }
-});
-
-app.post("/api/auth/register", (req, res) => {
-  const { email, password, name } = req.body;
-
-  if (!email || !password || !name) {
-    return res.status(400).json({
-      success: false,
-      error: { message: "Email, password, and name are required" },
-    });
-  }
-
-  // Mock registration - replace with real registration logic
-  res.json({
-    success: true,
-    data: {
-      user: {
-        id: Date.now().toString(),
-        email: email,
-        name: name,
-        role: "student",
-      },
-      token: "mock-jwt-token-" + Date.now(),
-    },
-    message: "Registration successful",
-  });
-});
-
-// Mock data endpoints
-app.get("/api/institutions", (req, res) => {
-  res.json({
-    success: true,
-    data: [
-      { id: "1", name: "New Horizon College of Engineering", code: "NHCE" },
-      { id: "2", name: "Bangalore Institute of Technology", code: "BIT" },
-      { id: "3", name: "RV College of Engineering", code: "RVCE" },
-    ],
-  });
-});
-
-app.get("/api/departments/:institutionId", (req, res) => {
-  const departments = [
-    { id: "1", name: "Computer Science Engineering", code: "CSE" },
-    { id: "2", name: "Information Science Engineering", code: "ISE" },
-    { id: "3", name: "Electronics and Communication Engineering", code: "ECE" },
-    { id: "4", name: "Mechanical Engineering", code: "ME" },
-    { id: "5", name: "Civil Engineering", code: "CE" },
-  ];
-
-  res.json({
-    success: true,
-    data: departments,
-  });
-});
 
 // Chat endpoints (minimal)
 app.post("/api/chat/sessions", (req, res) => {

@@ -1,332 +1,167 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
 
-const counsellorSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  phone: {
-    type: String,
-    trim: true
-  },
-  specialization: {
-    type: String,
-    required: true,
-    enum: [
-      'Anxiety & Depression', 'Academic Stress', 'Relationship Issues',
-      'Career Counseling', 'Family Therapy', 'Trauma Recovery',
-      'Substance Abuse', 'Eating Disorders', 'LGBTQ+ Support', 'Grief Counseling'
-    ]
-  },
-  credentials: {
-    degree: String,
-    license: String,
-    certifications: [String],
-    yearsOfExperience: {
-      type: Number,
-      min: 0
-    }
-  },
-  bio: {
-    type: String,
-    maxlength: 1000
-  },
-  profilePicture: {
-    type: String,
-    default: '/images/default-counsellor.jpg'
-  },
-  isAvailable: {
-    type: Boolean,
-    default: true
-  },
-  workingHours: {
-    start: {
-      type: Number,
-      min: 0,
-      max: 23,
-      default: 9
-    },
-    end: {
-      type: Number,
-      min: 0,
-      max: 23,
-      default: 17
-    },
-    timezone: {
-      type: String,
-      default: 'UTC'
-    }
-  },
-  languages: [{
-    type: String,
-    default: ['English']
-  }],
-  // Ratings and reviews
-  rating: {
-    average: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 5
-    },
-    count: {
-      type: Number,
-      default: 0
-    }
-  },
-  reviews: [{
+const counsellorSchema = new mongoose.Schema(
+  {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    rating: {
-      type: Number,
+      ref: "User",
       required: true,
-      min: 1,
-      max: 5
+      unique: true,
     },
-    review: String,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
-  // Availability
-  availability: {
-    monday: [{ start: String, end: String }],
-    tuesday: [{ start: String, end: String }],
-    wednesday: [{ start: String, end: String }],
-    thursday: [{ start: String, end: String }],
-    friday: [{ start: String, end: String }],
-    saturday: [{ start: String, end: String }],
-    sunday: [{ start: String, end: String }]
-  },
-  // Session preferences
-  sessionPreferences: {
-    duration: {
-      type: Number,
-      default: 60, // minutes
-      min: 30,
-      max: 120
-    },
-    maxClientsPerDay: {
-      type: Number,
-      default: 8,
-      min: 1,
-      max: 20
-    },
-    communicationMethods: [{
+    licenseNumber: {
       type: String,
-      enum: ['video', 'phone', 'in-person']
-    }]
-  },
-  // Statistics
-  statistics: {
-    totalSessions: {
-      type: Number,
-      default: 0
+      required: true,
+      unique: true,
     },
-    totalClients: {
-      type: Number,
-      default: 0
+    specialization: [
+      {
+        type: String,
+        enum: [
+          "Anxiety & Depression",
+          "Academic Stress",
+          "Relationship Issues",
+          "Career Counseling",
+          "Family Therapy",
+          "Trauma Recovery",
+          "Substance Abuse",
+          "Eating Disorders",
+          "LGBTQ+ Support",
+          "Grief Counseling",
+          "Addiction Recovery",
+          "PTSD Treatment",
+        ],
+      },
+    ],
+    experience: {
+      years: { type: Number, required: true },
+      description: String,
     },
-    averageSessionRating: {
-      type: Number,
-      default: 0
-    },
-    responseTime: {
-      type: Number, // in hours
-      default: 24
-    }
-  },
-  // Verification
-  isVerified: {
-    type: Boolean,
-    default: false
-  },
-  verificationDocuments: [{
-    type: {
+    education: [
+      {
+        degree: String,
+        institution: String,
+        year: Number,
+        specialization: String,
+      },
+    ],
+    certifications: [
+      {
+        name: String,
+        issuer: String,
+        date: Date,
+        expiryDate: Date,
+      },
+    ],
+    bio: {
       type: String,
-      enum: ['license', 'degree', 'certification', 'id']
+      required: true,
+      maxlength: 1000,
     },
-    url: String,
-    status: {
-      type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending'
+    profilePicture: String,
+    languages: [String],
+    availability: {
+      workingDays: [
+        {
+          type: String,
+          enum: [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+          ],
+        },
+      ],
+      workingHours: {
+        start: { type: String, required: true }, // HH:MM format
+        end: { type: String, required: true },
+      },
+      timezone: { type: String, default: "Asia/Kolkata" },
+      breaks: [
+        {
+          start: String,
+          end: String,
+          reason: String,
+        },
+      ],
     },
-    uploadedAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
-  lastLogin: {
-    type: Date
+    pricing: {
+      individualSession: { type: Number, required: true },
+      groupSession: Number,
+      emergencySession: Number,
+      currency: { type: String, default: "INR" },
+    },
+    ratings: {
+      average: { type: Number, default: 0 },
+      total: { type: Number, default: 0 },
+      breakdown: {
+        5: { type: Number, default: 0 },
+        4: { type: Number, default: 0 },
+        3: { type: Number, default: 0 },
+        2: { type: Number, default: 0 },
+        1: { type: Number, default: 0 },
+      },
+    },
+    statistics: {
+      totalSessions: { type: Number, default: 0 },
+      totalClients: { type: Number, default: 0 },
+      averageSessionDuration: { type: Number, default: 60 },
+      completionRate: { type: Number, default: 0 },
+      noShowRate: { type: Number, default: 0 },
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationDocuments: [
+      {
+        type: String,
+        url: String,
+        status: { type: String, enum: ["pending", "approved", "rejected"] },
+        uploadedAt: Date,
+        reviewedAt: Date,
+      },
+    ],
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
-// Indexes
-counsellorSchema.index({ email: 1 });
+// Index for better query performance
 counsellorSchema.index({ specialization: 1 });
-counsellorSchema.index({ isAvailable: 1 });
-counsellorSchema.index({ 'rating.average': -1 });
-counsellorSchema.index({ isVerified: 1 });
+counsellorSchema.index({ "ratings.average": -1 });
+counsellorSchema.index({ isActive: 1, isAvailable: 1 });
+counsellorSchema.index({ "availability.workingDays": 1 });
 
-// Virtual for counsellor's full profile
-counsellorSchema.virtual('fullProfile').get(function() {
-  return {
-    id: this._id,
-    name: this.name,
-    email: this.email,
-    specialization: this.specialization,
-    credentials: this.credentials,
-    bio: this.bio,
-    profilePicture: this.profilePicture,
-    rating: this.rating,
-    isAvailable: this.isAvailable,
-    workingHours: this.workingHours,
-    languages: this.languages,
-    isVerified: this.isVerified
-  };
+// Virtual for counsellor rating
+counsellorSchema.virtual("rating").get(function () {
+  return this.ratings.average;
 });
-
-// Pre-save middleware to hash password
-counsellorSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Method to compare password
-counsellorSchema.methods.comparePassword = async function(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
 
 // Method to update rating
-counsellorSchema.methods.updateRating = function(newRating) {
-  const totalRating = this.rating.average * this.rating.count + newRating;
-  this.rating.count += 1;
-  this.rating.average = totalRating / this.rating.count;
-  return this.save();
-};
+counsellorSchema.methods.updateRating = function (newRating) {
+  this.ratings.total += 1;
+  this.ratings.breakdown[newRating] += 1;
 
-// Method to add review
-counsellorSchema.methods.addReview = function(userId, rating, review) {
-  // Remove existing review from this user
-  this.reviews = this.reviews.filter(r => !r.userId.equals(userId));
-  
-  // Add new review
-  this.reviews.push({
-    userId,
-    rating,
-    review
-  });
-  
-  // Update rating
-  this.updateRating(rating);
-  
-  return this.save();
-};
-
-// Method to check availability for specific time
-counsellorSchema.methods.isAvailableAt = function(dateTime) {
-  if (!this.isAvailable) return false;
-  
-  const appointmentDate = new Date(dateTime);
-  const dayOfWeek = appointmentDate.toLocaleLowerCase().slice(0, 3);
-  const hour = appointmentDate.getHours();
-  
-  // Check if within working hours
-  if (hour < this.workingHours.start || hour >= this.workingHours.end) {
-    return false;
+  // Calculate new average
+  let total = 0;
+  let count = 0;
+  for (let i = 1; i <= 5; i++) {
+    total += i * this.ratings.breakdown[i];
+    count += this.ratings.breakdown[i];
   }
-  
-  // Check specific day availability
-  const dayAvailability = this.availability[dayOfWeek];
-  if (!dayAvailability || dayAvailability.length === 0) {
-    return false;
-  }
-  
-  // Check if time falls within available slots
-  const timeString = appointmentDate.toTimeString().slice(0, 5);
-  return dayAvailability.some(slot => 
-    timeString >= slot.start && timeString < slot.end
-  );
+  this.ratings.average = count > 0 ? total / count : 0;
 };
 
-// Method to get available time slots for a date
-counsellorSchema.methods.getAvailableSlots = function(date) {
-  const appointmentDate = new Date(date);
-  const dayOfWeek = appointmentDate.toLocaleLowerCase().slice(0, 3);
-  const dayAvailability = this.availability[dayOfWeek];
-  
-  if (!dayAvailability || dayAvailability.length === 0) {
-    return [];
-  }
-  
-  const slots = [];
-  dayAvailability.forEach(slot => {
-    const startHour = parseInt(slot.start.split(':')[0]);
-    const endHour = parseInt(slot.end.split(':')[0]);
-    
-    for (let hour = startHour; hour < endHour; hour++) {
-      const slotTime = new Date(appointmentDate);
-      slotTime.setHours(hour, 0, 0, 0);
-      
-      if (slotTime > new Date()) { // Only future slots
-        slots.push({
-          time: slotTime.toISOString(),
-          displayTime: slotTime.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-          })
-        });
-      }
-    }
-  });
-  
-  return slots;
-};
-
-// Static method to get counsellors by specialization
-counsellorSchema.statics.getBySpecialization = function(specialization) {
-  return this.find({
-    specialization,
-    isAvailable: true,
-    isVerified: true
-  }).sort({ 'rating.average': -1 });
-};
-
-// Static method to get top rated counsellors
-counsellorSchema.statics.getTopRated = function(limit = 10) {
-  return this.find({
-    isAvailable: true,
-    isVerified: true,
-    'rating.count': { $gte: 5 } // At least 5 reviews
-  }).sort({ 'rating.average': -1 }).limit(limit);
-};
-
-module.exports = mongoose.model('Counsellor', counsellorSchema);
+module.exports = mongoose.model("Counsellor", counsellorSchema);
