@@ -19,18 +19,21 @@ import { resources } from "../../data/mockData";
 const ResourceHub = () => {
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLanguage, setSelectedLanguage] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredResources = resources.filter((resource) => {
     const matchesType =
       selectedType === "all" || resource.type === selectedType;
+    const matchesCategory =
+      selectedCategory === "all" || resource.category === selectedCategory;
     const matchesLanguage =
       selectedLanguage === "all" || resource.language === selectedLanguage;
     const matchesSearch =
       resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       resource.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesType && matchesLanguage && matchesSearch;
+    return matchesType && matchesCategory && matchesLanguage && matchesSearch;
   });
 
   const getTypeIcon = (type) => {
@@ -129,6 +132,18 @@ const ResourceHub = () => {
                   </select>
                 </div>
                 <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 font-semibold"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="anxiety">Anxiety</option>
+                  <option value="mindfulness">Mindfulness</option>
+                  <option value="stress">Stress</option>
+                  <option value="sleep">Sleep</option>
+                  <option value="relationships">Relationships</option>
+                </select>
+                <select
                   value={selectedLanguage}
                   onChange={(e) => setSelectedLanguage(e.target.value)}
                   className="px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-gray-300 font-semibold"
@@ -136,7 +151,7 @@ const ResourceHub = () => {
                   <option value="all">All Languages</option>
                   <option value="English">English</option>
                   <option value="Hindi">Hindi</option>
-                  <option value="Tamil">Tamil</option>
+                  <option value="Kannada">Kannada</option>
                 </select>
               </div>
             </div>
@@ -304,7 +319,7 @@ const ResourceHub = () => {
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {["English", "Hindi", "Tamil", "Bengali"].map((lang, index) => (
+            {["English", "Kannada", "Hindi", "Bengali"].map((lang, index) => (
               <div
                 key={lang}
                 className="group text-center p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl hover:from-blue-50 hover:to-purple-50 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg animate-fade-in-up"

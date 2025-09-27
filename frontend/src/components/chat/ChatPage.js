@@ -45,7 +45,7 @@ const ChatPage = () => {
   const [chatHistory, setChatHistory] = useState([
     { id: 1, title: "New Conversation", type: "Supportive Listener" },
     { id: 2, title: "Morning Check-in", type: "Motivational Coach" },
-    { id: 3, title: "Anxiety Support", type: "Calm Companion" }
+    { id: 3, title: "Anxiety Support", type: "Calm Companion" },
   ]);
   const [showChatDropdown, setShowChatDropdown] = useState(false);
   const [showJournalDropdown, setShowJournalDropdown] = useState(false);
@@ -129,6 +129,8 @@ const ChatPage = () => {
       let botResponse = "";
       if (activeTab === "clinical") {
         const responses = [
+          "I hear your drive to improve. Encouraging and forward‑looking, with practical steps. Based on what you said about feeling low, what's one tiny step you could take today? I can help you plan it.",
+          "I hear you. Stress can feel really heavy, and it's completely okay to acknowledge it. Sometimes, just sharing that you're feeling this way is the first step toward easing the weight a little. Stress often comes from carrying too many thoughts at once—work, studies, personal stuff, or even expectations you set for yourself. One thing that can help is slowing down for a moment. Try taking a few deep breaths—inhale slowly through your nose, hold it for a second, and exhale gently. This signals your body to calm down. You might also find it helpful to break things into smaller, more manageable steps instead of trying to handle everything at once.",
           "I understand you're going through a difficult time. It's important to remember that seeking help is a sign of strength.",
           "Your feelings are valid, and it's okay to not be okay sometimes. Have you tried any coping strategies?",
           "It sounds like you're dealing with a lot right now. Would you like to talk about what's been most challenging?",
@@ -157,16 +159,16 @@ const ChatPage = () => {
 
   const handleSaveJournal = () => {
     if (!journalText.trim()) return;
-    
+
     const newJournal = {
       id: savedJournals.length + 1,
       text: journalText,
       timestamp: new Date(),
     };
-    
+
     setSavedJournals([...savedJournals, newJournal]);
     setJournalText("");
-    
+
     // Send journal context to chatbot
     const contextMessage = {
       id: messages.length + 1,
@@ -174,8 +176,8 @@ const ChatPage = () => {
       text: `Journal entry saved. The chatbot will consider your latest journal while responding.`,
       timestamp: new Date(),
     };
-    
-    setMessages(prev => [...prev, contextMessage]);
+
+    setMessages((prev) => [...prev, contextMessage]);
   };
 
   const handleClearJournal = () => {
@@ -189,7 +191,10 @@ const ChatPage = () => {
     const newChat = {
       id: newChatId,
       title: `Chat ${newChatId}`,
-      type: activeTab === "clinical" ? "AI First-Aid" : chatPersonalities[selectedPersonality].name
+      type:
+        activeTab === "clinical"
+          ? "AI First-Aid"
+          : chatPersonalities[selectedPersonality].name,
     };
     setChatHistory([...chatHistory, newChat]);
   };
@@ -329,7 +334,11 @@ const ChatPage = () => {
       </div>
 
       {/* Sidebar */}
-      <div className={`${showSidebar ? 'w-80' : 'w-0'} transition-all duration-300 overflow-hidden bg-white/90 backdrop-blur-md shadow-xl border-r border-white/20 flex flex-col relative z-10`}>
+      <div
+        className={`${
+          showSidebar ? "w-80" : "w-0"
+        } transition-all duration-300 overflow-hidden bg-white/90 backdrop-blur-md shadow-xl border-r border-white/20 flex flex-col relative z-10`}
+      >
         <div className="p-4 border-b border-gray-200/50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
@@ -345,7 +354,7 @@ const ChatPage = () => {
               <X className="h-4 w-4" />
             </button>
           </div>
-          <button 
+          <button
             onClick={handleNewChat}
             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-lg px-4 py-2 text-sm font-medium transition-colors flex items-center justify-center space-x-2 text-white"
           >
@@ -365,9 +374,13 @@ const ChatPage = () => {
                 <MessageCircle className="h-4 w-4" />
                 <span>CHAT HISTORY</span>
               </span>
-              {showChatDropdown ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {showChatDropdown ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </button>
-            
+
             {showChatDropdown && (
               <div className="ml-4 mt-2 space-y-1">
                 {chatHistory.map((chat) => (
@@ -375,7 +388,9 @@ const ChatPage = () => {
                     key={chat.id}
                     className="w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
                   >
-                    <div className="text-sm font-medium text-gray-900">{chat.title}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {chat.title}
+                    </div>
                     <div className="text-xs text-gray-600">{chat.type}</div>
                   </button>
                 ))}
@@ -393,21 +408,31 @@ const ChatPage = () => {
                 <Book className="h-4 w-4" />
                 <span>JOURNAL ENTRIES</span>
               </span>
-              {showJournalDropdown ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {showJournalDropdown ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </button>
-            
+
             {showJournalDropdown && (
               <div className="ml-4 mt-2 space-y-1">
                 {savedJournals.length === 0 ? (
-                  <div className="text-xs text-gray-500 p-2">No journal entries yet</div>
+                  <div className="text-xs text-gray-500 p-2">
+                    No journal entries yet
+                  </div>
                 ) : (
                   savedJournals.map((journal) => (
                     <button
                       key={journal.id}
                       className="w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
                     >
-                      <div className="text-sm text-gray-900 truncate">{journal.text.substring(0, 30)}...</div>
-                      <div className="text-xs text-gray-600">{journal.timestamp.toLocaleDateString()}</div>
+                      <div className="text-sm text-gray-900 truncate">
+                        {journal.text.substring(0, 30)}...
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {journal.timestamp.toLocaleDateString()}
+                      </div>
                     </button>
                   ))
                 )}
@@ -461,7 +486,7 @@ const ChatPage = () => {
                       : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                   }`}
                 >
-                  Clinical Chatbot
+                  AI First-Aid Assistant
                   {!hasCompletedScreening && !isGuestMode && (
                     <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
                       PHQ-9 Required
@@ -486,7 +511,11 @@ const ChatPage = () => {
         {/* Chat Content */}
         <div className="flex-1 flex min-h-0">
           {/* Chat Interface */}
-          <div className={`${showJournal && activeTab === "buddy" ? 'w-1/2' : 'w-full'} flex flex-col min-w-0`}>
+          <div
+            className={`${
+              showJournal && activeTab === "buddy" ? "w-1/2" : "w-full"
+            } flex flex-col min-w-0`}
+          >
             <div className="bg-white/80 backdrop-blur-sm shadow-2xl h-full flex flex-col border-r border-white/20">
               {/* Chat Header */}
               <div className="p-6 border-b border-gray-200/50 flex-shrink-0">
@@ -590,13 +619,13 @@ const ChatPage = () => {
                       </p>
                     </div>
                     <div className="flex justify-center space-x-4">
-                      <button 
+                      <button
                         onClick={() => setInputMessage("How are you feeling?")}
                         className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                       >
                         How are you feeling?
                       </button>
-                      <button 
+                      <button
                         onClick={() => setInputMessage("I need help")}
                         className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors"
                       >
@@ -609,8 +638,12 @@ const ChatPage = () => {
                     <div
                       key={message.id}
                       className={`flex ${
-                        message.type === "user" ? "justify-end" : "justify-start"
-                      } ${message.type === "system" ? "justify-center" : ""} animate-fade-in-up`}
+                        message.type === "user"
+                          ? "justify-end"
+                          : "justify-start"
+                      } ${
+                        message.type === "system" ? "justify-center" : ""
+                      } animate-fade-in-up`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       {message.type === "system" ? (
@@ -631,7 +664,9 @@ const ChatPage = () => {
                                 : "bg-gray-100 text-gray-900"
                             }`}
                           >
-                            <p className="text-sm leading-relaxed">{message.text}</p>
+                            <p className="text-sm leading-relaxed">
+                              {message.text}
+                            </p>
                             <p
                               className={`text-xs mt-2 ${
                                 message.type === "user"
@@ -708,10 +743,11 @@ const ChatPage = () => {
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              
+
               <div className="flex-1 p-6 min-h-0">
                 <div className="text-gray-600 text-sm mb-4">
-                  Write your thoughts here... Express yourself freely and reflect on your feelings.
+                  Write your thoughts here... Express yourself freely and
+                  reflect on your feelings.
                 </div>
                 <textarea
                   value={journalText}
@@ -720,7 +756,7 @@ const ChatPage = () => {
                   className="w-full h-full resize-none border-none outline-none text-gray-800 placeholder-gray-400 bg-transparent text-lg leading-relaxed"
                 />
               </div>
-              
+
               <div className="p-4 border-t border-gray-200/50 flex justify-between flex-shrink-0">
                 <button
                   onClick={handleClearJournal}
@@ -736,10 +772,11 @@ const ChatPage = () => {
                   <span>Save</span>
                 </button>
               </div>
-              
+
               <div className="px-4 pb-4 flex-shrink-0">
                 <div className="text-xs text-gray-500 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                  The chatbot will gently consider your latest saved journal while replying.
+                  The chatbot will gently consider your latest saved journal
+                  while replying.
                 </div>
               </div>
             </div>

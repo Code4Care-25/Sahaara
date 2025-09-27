@@ -1,16 +1,16 @@
-const ChatSession = require('../models/ChatSession');
-const User = require('../models/User');
+const ChatSession = require("../models/ChatSession");
+const User = require("../models/User");
 
 // Create new chat session
 const createChatSession = async (req, res) => {
   try {
-    const { personality = 'supportive' } = req.body;
+    const { personality = "supportive" } = req.body;
     const userId = req.user._id;
 
     const session = new ChatSession({
       userId,
       personality,
-      messages: []
+      messages: [],
     });
 
     await session.save();
@@ -23,15 +23,15 @@ const createChatSession = async (req, res) => {
         personality: session.personality,
         messages: session.messages,
         createdAt: session.createdAt,
-        isCompleted: session.isCompleted
+        isCompleted: session.isCompleted,
       },
-      message: 'Chat session created successfully'
+      message: "Chat session created successfully",
     });
   } catch (error) {
-    console.error('Create session error:', error);
+    console.error("Create session error:", error);
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to create chat session' }
+      error: { message: "Failed to create chat session" },
     });
   }
 };
@@ -48,41 +48,45 @@ const sendMessage = async (req, res) => {
     if (!session) {
       return res.status(404).json({
         success: false,
-        error: { message: 'Chat session not found' }
+        error: { message: "Chat session not found" },
       });
     }
 
     if (session.isCompleted) {
       return res.status(400).json({
         success: false,
-        error: { message: 'Cannot send messages to completed session' }
+        error: { message: "Cannot send messages to completed session" },
       });
     }
 
     // Add user message
     const userMessage = {
-      role: 'user',
+      role: "user",
       content: content.trim(),
       timestamp: new Date(),
       metadata: {
         sentiment: analyzeSentiment(content),
-        keywords: extractKeywords(content)
-      }
+        keywords: extractKeywords(content),
+      },
     };
 
     session.messages.push(userMessage);
 
     // Generate AI response based on personality
-    const aiResponse = generateAIResponse(content, session.personality, session.messages);
-    
+    const aiResponse = generateAIResponse(
+      content,
+      session.personality,
+      session.messages
+    );
+
     const assistantMessage = {
-      role: 'assistant',
+      role: "assistant",
       content: aiResponse,
       timestamp: new Date(),
       metadata: {
         responseTime: 1000, // Mock response time
-        sentiment: analyzeSentiment(aiResponse)
-      }
+        sentiment: analyzeSentiment(aiResponse),
+      },
     };
 
     session.messages.push(assistantMessage);
@@ -92,15 +96,15 @@ const sendMessage = async (req, res) => {
       success: true,
       data: {
         sessionId: session._id,
-        messages: [userMessage, assistantMessage]
+        messages: [userMessage, assistantMessage],
       },
-      message: 'Message sent successfully'
+      message: "Message sent successfully",
     });
   } catch (error) {
-    console.error('Send message error:', error);
+    console.error("Send message error:", error);
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to send message' }
+      error: { message: "Failed to send message" },
     });
   }
 };
@@ -116,7 +120,7 @@ const completeChatSession = async (req, res) => {
     if (!session) {
       return res.status(404).json({
         success: false,
-        error: { message: 'Chat session not found' }
+        error: { message: "Chat session not found" },
       });
     }
 
@@ -125,7 +129,9 @@ const completeChatSession = async (req, res) => {
     session.analytics.userSatisfaction = satisfaction;
     session.analytics.moodChange = moodChange;
     session.analytics.followUpNeeded = followUpNeeded;
-    session.analytics.sessionDuration = Math.round((session.completedAt - session.createdAt) / 1000 / 60);
+    session.analytics.sessionDuration = Math.round(
+      (session.completedAt - session.createdAt) / 1000 / 60
+    );
 
     await session.save();
 
@@ -134,14 +140,14 @@ const completeChatSession = async (req, res) => {
       data: {
         sessionId: session._id,
         completedAt: session.completedAt,
-        duration: session.analytics.sessionDuration
+        duration: session.analytics.sessionDuration,
       },
-      message: 'Chat session completed successfully'
+      message: "Chat session completed successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to complete chat session' }
+      error: { message: "Failed to complete chat session" },
     });
   }
 };
@@ -157,7 +163,7 @@ const flagChatSession = async (req, res) => {
     if (!session) {
       return res.status(404).json({
         success: false,
-        error: { message: 'Chat session not found' }
+        error: { message: "Chat session not found" },
       });
     }
 
@@ -169,12 +175,12 @@ const flagChatSession = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Chat session flagged successfully'
+      message: "Chat session flagged successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to flag chat session' }
+      error: { message: "Failed to flag chat session" },
     });
   }
 };
@@ -191,7 +197,7 @@ const getChatSessions = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .select('-messages') // Don't include full messages in list
+      .select("-messages") // Don't include full messages in list
       .lean();
 
     const total = await ChatSession.countDocuments({ userId });
@@ -204,13 +210,13 @@ const getChatSessions = async (req, res) => {
         totalPages: Math.ceil(total / limit),
         totalSessions: total,
         hasNext: page < Math.ceil(total / limit),
-        hasPrev: page > 1
-      }
+        hasPrev: page > 1,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to fetch chat sessions' }
+      error: { message: "Failed to fetch chat sessions" },
     });
   }
 };
@@ -225,18 +231,18 @@ const getChatSession = async (req, res) => {
     if (!session) {
       return res.status(404).json({
         success: false,
-        error: { message: 'Chat session not found' }
+        error: { message: "Chat session not found" },
       });
     }
 
     res.json({
       success: true,
-      data: session
+      data: session,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to fetch chat session' }
+      error: { message: "Failed to fetch chat session" },
     });
   }
 };
@@ -252,30 +258,37 @@ const getChatAnalytics = async (req, res) => {
       averageDuration,
       personalityStats,
       moodStats,
-      weeklyStats
+      weeklyStats,
     ] = await Promise.all([
       ChatSession.countDocuments({ userId }),
       ChatSession.countDocuments({ userId, isCompleted: true }),
       ChatSession.aggregate([
         { $match: { userId, isCompleted: true } },
-        { $group: { _id: null, avgDuration: { $avg: '$analytics.sessionDuration' } } }
+        {
+          $group: {
+            _id: null,
+            avgDuration: { $avg: "$analytics.sessionDuration" },
+          },
+        },
       ]),
       ChatSession.aggregate([
         { $match: { userId } },
-        { $group: { _id: '$personality', count: { $sum: 1 } } }
+        { $group: { _id: "$personality", count: { $sum: 1 } } },
       ]),
       ChatSession.aggregate([
         { $match: { userId, isCompleted: true } },
-        { $group: { _id: '$analytics.moodChange', count: { $sum: 1 } } }
+        { $group: { _id: "$analytics.moodChange", count: { $sum: 1 } } },
       ]),
-      getWeeklySessionStats(userId)
+      getWeeklySessionStats(userId),
     ]);
 
-    const mostUsedPersonality = personalityStats.reduce((max, current) => 
-      current.count > max.count ? current : max, { count: 0, _id: 'none' });
+    const mostUsedPersonality = personalityStats.reduce(
+      (max, current) => (current.count > max.count ? current : max),
+      { count: 0, _id: "none" }
+    );
 
     const moodBreakdown = moodStats.reduce((acc, item) => {
-      acc[item._id || 'unknown'] = item.count;
+      acc[item._id || "unknown"] = item.count;
       return acc;
     }, {});
 
@@ -288,13 +301,14 @@ const getChatAnalytics = async (req, res) => {
         mostUsedPersonality: mostUsedPersonality._id,
         moodAfterChat: moodBreakdown,
         weeklySessions: weeklyStats,
-        completionRate: totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0
-      }
+        completionRate:
+          totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: { message: 'Failed to fetch chat analytics' }
+      error: { message: "Failed to fetch chat analytics" },
     });
   }
 };
@@ -302,60 +316,107 @@ const getChatAnalytics = async (req, res) => {
 // Helper functions
 function generateAIResponse(userMessage, personality, messageHistory) {
   const responses = {
+    "AI First-Aid Assistant": [
+      "I hear your drive to improve. Encouraging and forward‑looking, with practical steps. Based on what you said about feeling low, what's one tiny step you could take today? I can help you plan it.",
+      "I understand you're going through a difficult time. It's important to remember that seeking help is a sign of strength.",
+      "Your feelings are valid, and it's okay to not be okay sometimes. Have you tried any coping strategies?",
+      "It sounds like you're dealing with a lot right now. Would you like to talk about what's been most challenging?",
+      "I'm here to listen and support you. Sometimes just talking about what's on your mind can help.",
+      "Based on your screening results, I'd recommend speaking with a professional counsellor. Would you like me to help you book an appointment?",
+    ],
     supportive: [
       "I understand how you're feeling. It's completely normal to have these thoughts.",
       "You're not alone in this. Many people experience similar feelings.",
       "It takes courage to share what you're going through. Thank you for trusting me.",
       "Let's work through this together, one step at a time.",
-      "I'm here to support you through this. What would be most helpful right now?"
+      "I'm here to support you through this. What would be most helpful right now?",
     ],
     professional: [
       "Based on what you've shared, I'd like to explore some evidence-based strategies.",
       "Let's examine this situation from a different perspective.",
       "I notice some patterns in what you're describing. Let's discuss them.",
       "From a clinical standpoint, this is a common experience. Here's what we know...",
-      "Let's break this down systematically and identify specific areas to work on."
+      "Let's break this down systematically and identify specific areas to work on.",
     ],
     friendly: [
       "Hey, I'm really glad you're sharing this with me!",
       "That sounds really tough. I'm here to listen and help however I can.",
       "You know what? You're doing great by reaching out. That's not easy.",
       "I've got your back on this one. Let's figure it out together!",
-      "Thanks for being so open with me. That takes real strength."
+      "Thanks for being so open with me. That takes real strength.",
     ],
     analytical: [
       "Let's analyze the factors contributing to this situation.",
       "I'd like to understand the root causes here. Can you tell me more about...",
       "There seem to be several variables at play. Let's examine each one.",
       "From a problem-solving perspective, let's identify the key issues.",
-      "Let's map out the different aspects of this challenge systematically."
-    ]
+      "Let's map out the different aspects of this challenge systematically.",
+    ],
   };
 
-  const personalityResponses = responses[personality] || responses.supportive;
-  return personalityResponses[Math.floor(Math.random() * personalityResponses.length)];
+  const personalityResponses =
+    responses[personality] || responses["AI First-Aid Assistant"];
+  return personalityResponses[
+    Math.floor(Math.random() * personalityResponses.length)
+  ];
 }
 
 function analyzeSentiment(text) {
   // Simple sentiment analysis (in production, use a proper NLP library)
-  const positiveWords = ['good', 'great', 'happy', 'excited', 'better', 'amazing', 'wonderful'];
-  const negativeWords = ['bad', 'terrible', 'sad', 'angry', 'worried', 'anxious', 'depressed'];
-  
+  const positiveWords = [
+    "good",
+    "great",
+    "happy",
+    "excited",
+    "better",
+    "amazing",
+    "wonderful",
+  ];
+  const negativeWords = [
+    "bad",
+    "terrible",
+    "sad",
+    "angry",
+    "worried",
+    "anxious",
+    "depressed",
+  ];
+
   const lowerText = text.toLowerCase();
-  const positiveCount = positiveWords.filter(word => lowerText.includes(word)).length;
-  const negativeCount = negativeWords.filter(word => lowerText.includes(word)).length;
-  
-  if (positiveCount > negativeCount) return 'positive';
-  if (negativeCount > positiveCount) return 'negative';
-  return 'neutral';
+  const positiveCount = positiveWords.filter((word) =>
+    lowerText.includes(word)
+  ).length;
+  const negativeCount = negativeWords.filter((word) =>
+    lowerText.includes(word)
+  ).length;
+
+  if (positiveCount > negativeCount) return "positive";
+  if (negativeCount > positiveCount) return "negative";
+  return "neutral";
 }
 
 function extractKeywords(text) {
   // Simple keyword extraction (in production, use proper NLP)
-  const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
-  return text.toLowerCase()
+  const commonWords = [
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "but",
+    "in",
+    "on",
+    "at",
+    "to",
+    "for",
+    "of",
+    "with",
+    "by",
+  ];
+  return text
+    .toLowerCase()
     .split(/\s+/)
-    .filter(word => word.length > 3 && !commonWords.includes(word))
+    .filter((word) => word.length > 3 && !commonWords.includes(word))
     .slice(0, 5);
 }
 
@@ -365,16 +426,16 @@ async function getWeeklySessionStats(userId) {
     { $match: { userId, createdAt: { $gte: oneWeekAgo } } },
     {
       $group: {
-        _id: { $dayOfWeek: '$createdAt' },
-        count: { $sum: 1 }
-      }
+        _id: { $dayOfWeek: "$createdAt" },
+        count: { $sum: 1 },
+      },
     },
-    { $sort: { _id: 1 } }
+    { $sort: { _id: 1 } },
   ]);
 
   // Convert to array with 7 days (Sunday = 1)
   const weeklyStats = [0, 0, 0, 0, 0, 0, 0];
-  stats.forEach(stat => {
+  stats.forEach((stat) => {
     weeklyStats[stat._id - 1] = stat.count;
   });
 
@@ -388,5 +449,5 @@ module.exports = {
   flagChatSession,
   getChatSessions,
   getChatSession,
-  getChatAnalytics
+  getChatAnalytics,
 };
