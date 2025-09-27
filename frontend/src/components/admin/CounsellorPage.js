@@ -231,17 +231,17 @@ const CounsellorPage = () => {
                             }
                             className="flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                           >
-                            <Check className="h-5 w-5 mr-2" />
+                            {/* <Check className="h-5 w-5 mr-2" /> */}
                             Approve
                           </button>
                           <button
                             onClick={() =>
                               handleRejectAppointment(appointment.id)
                             }
-                            className="flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 text-white rounded-xl hover:from-red-600 hover:to-pink-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                            className="flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-xl hover:from-yellow-500 hover:to-yellow-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                           >
-                            <X className="h-5 w-5 mr-2" />
-                            Reject
+                            {/* <X className="h-5 w-5 mr-2" /> */}
+                            Reschedule
                           </button>
                         </div>
                       </div>
