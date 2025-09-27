@@ -1,4 +1,4 @@
-// Date utilities
+// Date and time utilities
 export const formatDate = (date, options = {}) => {
   const defaultOptions = {
     year: "numeric",
@@ -15,7 +15,6 @@ export const formatTime = (date, options = {}) => {
   const defaultOptions = {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: true,
   };
   return new Date(date).toLocaleTimeString("en-US", {
     ...defaultOptions,
@@ -29,8 +28,8 @@ export const formatDateTime = (date) => {
 
 export const getRelativeTime = (date) => {
   const now = new Date();
-  const targetDate = new Date(date);
-  const diffInSeconds = Math.floor((now - targetDate) / 1000);
+  const past = new Date(date);
+  const diffInSeconds = Math.floor((now - past) / 1000);
 
   if (diffInSeconds < 60) return "Just now";
   if (diffInSeconds < 3600)
@@ -39,130 +38,50 @@ export const getRelativeTime = (date) => {
     return `${Math.floor(diffInSeconds / 3600)} hours ago`;
   if (diffInSeconds < 2592000)
     return `${Math.floor(diffInSeconds / 86400)} days ago`;
-  if (diffInSeconds < 31536000)
-    return `${Math.floor(diffInSeconds / 2592000)} months ago`;
-  return `${Math.floor(diffInSeconds / 31536000)} years ago`;
+  return formatDate(date);
 };
 
 // String utilities
-export const capitalize = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-};
-
 export const truncateText = (text, maxLength = 100) => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + "...";
 };
 
+export const capitalizeFirst = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
+export const capitalizeWords = (str) => {
+  return str.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
+};
+
 export const slugify = (text) => {
   return text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^\w ]+/g, "")
+    .replace(/ +/g, "-");
 };
 
-// Validation utilities
-export const validateEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+// Number utilities
+export const formatNumber = (num, decimals = 0) => {
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(num);
 };
 
-export const validatePassword = (password) => {
-  const minLength = 8;
-  const hasUpperCase = /[A-Z]/.test(password);
-  const hasLowerCase = /[a-z]/.test(password);
-  const hasNumbers = /\d/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-  return {
-    isValid:
-      password.length >= minLength &&
-      hasUpperCase &&
-      hasLowerCase &&
-      hasNumbers &&
-      hasSpecialChar,
-    errors: {
-      minLength: password.length < minLength,
-      noUpperCase: !hasUpperCase,
-      noLowerCase: !hasLowerCase,
-      noNumbers: !hasNumbers,
-      noSpecialChar: !hasSpecialChar,
-    },
-  };
+export const formatPercentage = (num, decimals = 1) => {
+  return `${formatNumber(num, decimals)}%`;
 };
 
-export const validatePhoneNumber = (phone) => {
-  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-  return phoneRegex.test(phone.replace(/\s/g, ""));
-};
-
-// Local storage utilities
-export const storage = {
-  get: (key) => {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
-    } catch (error) {
-      console.error("Error getting from localStorage:", error);
-      return null;
-    }
-  },
-  set: (key, value) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error("Error setting to localStorage:", error);
-    }
-  },
-  remove: (key) => {
-    try {
-      localStorage.removeItem(key);
-    } catch (error) {
-      console.error("Error removing from localStorage:", error);
-    }
-  },
-  clear: () => {
-    try {
-      localStorage.clear();
-    } catch (error) {
-      console.error("Error clearing localStorage:", error);
-    }
-  },
-};
-
-// Session storage utilities
-export const sessionStorage = {
-  get: (key) => {
-    try {
-      const item = window.sessionStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
-    } catch (error) {
-      console.error("Error getting from sessionStorage:", error);
-      return null;
-    }
-  },
-  set: (key, value) => {
-    try {
-      window.sessionStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error("Error setting to sessionStorage:", error);
-    }
-  },
-  remove: (key) => {
-    try {
-      window.sessionStorage.removeItem(key);
-    } catch (error) {
-      console.error("Error removing from sessionStorage:", error);
-    }
-  },
-  clear: () => {
-    try {
-      window.sessionStorage.clear();
-    } catch (error) {
-      console.error("Error clearing sessionStorage:", error);
-    }
-  },
+export const formatCurrency = (amount, currency = "USD") => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency,
+  }).format(amount);
 };
 
 // Array utilities
@@ -175,12 +94,12 @@ export const groupBy = (array, key) => {
   }, {});
 };
 
-export const sortBy = (array, key, order = "asc") => {
+export const sortBy = (array, key, direction = "asc") => {
   return [...array].sort((a, b) => {
     const aVal = a[key];
     const bVal = b[key];
 
-    if (order === "desc") {
+    if (direction === "desc") {
       return bVal > aVal ? 1 : -1;
     }
     return aVal > bVal ? 1 : -1;
@@ -190,83 +109,102 @@ export const sortBy = (array, key, order = "asc") => {
 export const uniqueBy = (array, key) => {
   const seen = new Set();
   return array.filter((item) => {
-    const value = item[key];
-    if (seen.has(value)) {
+    const val = item[key];
+    if (seen.has(val)) {
       return false;
     }
-    seen.add(value);
+    seen.add(val);
     return true;
   });
 };
 
-// Number utilities
-export const formatNumber = (num, decimals = 0) => {
-  return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(num);
+// Object utilities
+export const deepClone = (obj) => {
+  return JSON.parse(JSON.stringify(obj));
 };
 
-export const formatCurrency = (amount, currency = "USD") => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency,
-  }).format(amount);
+export const isEmpty = (obj) => {
+  return Object.keys(obj).length === 0;
 };
 
-export const formatPercentage = (value, decimals = 1) => {
-  return `${(value * 100).toFixed(decimals)}%`;
+export const pick = (obj, keys) => {
+  return keys.reduce((result, key) => {
+    if (key in obj) {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {});
 };
 
-// Color utilities
-export const hexToRgb = (hex) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
-};
-
-export const rgbToHex = (r, g, b) => {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-};
-
-// URL utilities
-export const getQueryParams = () => {
-  const params = new URLSearchParams(window.location.search);
-  const result = {};
-  for (const [key, value] of params) {
-    result[key] = value;
-  }
+export const omit = (obj, keys) => {
+  const result = { ...obj };
+  keys.forEach((key) => delete result[key]);
   return result;
 };
 
-export const setQueryParam = (key, value) => {
-  const url = new URL(window.location);
-  url.searchParams.set(key, value);
-  window.history.pushState({}, "", url);
+// Validation utilities
+export const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
-export const removeQueryParam = (key) => {
-  const url = new URL(window.location);
-  url.searchParams.delete(key);
-  window.history.pushState({}, "", url);
+export const isValidPhone = (phone) => {
+  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+  return phoneRegex.test(phone.replace(/\s/g, ""));
 };
 
-// File utilities
-export const formatFileSize = (bytes) => {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+export const isValidPassword = (password) => {
+  // At least 6 characters, 1 uppercase, 1 lowercase, 1 number
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/;
+  return passwordRegex.test(password);
 };
 
-export const getFileExtension = (filename) => {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+export const isValidUrl = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// Local storage utilities
+export const storage = {
+  get: (key, defaultValue = null) => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  },
+
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  remove: (key) => {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  clear: () => {
+    try {
+      localStorage.clear();
+      return true;
+    } catch {
+      return false;
+    }
+  },
 };
 
 // Debounce utility
@@ -292,4 +230,202 @@ export const throttle = (func, limit) => {
       setTimeout(() => (inThrottle = false), limit);
     }
   };
+};
+
+// Color utilities
+export const getRandomColor = () => {
+  const colors = [
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+    "#96CEB4",
+    "#FFEAA7",
+    "#DDA0DD",
+    "#98D8C8",
+    "#F7DC6F",
+    "#BB8FCE",
+    "#85C1E9",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
+export const hexToRgb = (hex) => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+};
+
+// File utilities
+export const formatFileSize = (bytes) => {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+export const getFileExtension = (filename) => {
+  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+};
+
+// Mood and wellness utilities
+export const getMoodEmoji = (mood) => {
+  const moodEmojis = {
+    happy: "😊",
+    sad: "😢",
+    anxious: "😰",
+    calm: "😌",
+    excited: "🤩",
+    tired: "😴",
+    motivated: "💪",
+    grateful: "🙏",
+    reflective: "🤔",
+    neutral: "😐",
+    content: "😌",
+    stressed: "😫",
+  };
+  return moodEmojis[mood] || "😐";
+};
+
+export const getMoodColor = (mood) => {
+  const moodColors = {
+    happy: "#4CAF50",
+    sad: "#2196F3",
+    anxious: "#FF9800",
+    calm: "#9C27B0",
+    excited: "#E91E63",
+    tired: "#607D8B",
+    motivated: "#FF5722",
+    grateful: "#795548",
+    reflective: "#3F51B5",
+    neutral: "#9E9E9E",
+    content: "#8BC34A",
+    stressed: "#F44336",
+  };
+  return moodColors[mood] || "#9E9E9E";
+};
+
+export const getMealQualityColor = (quality) => {
+  const qualityColors = {
+    excellent: "#4CAF50",
+    good: "#8BC34A",
+    fair: "#FFC107",
+    poor: "#F44336",
+  };
+  return qualityColors[quality] || "#9E9E9E";
+};
+
+// Chart utilities
+export const generateChartData = (data, xKey, yKey) => {
+  return data.map((item) => ({
+    x: item[xKey],
+    y: item[yKey],
+    label: item.label || item[xKey],
+  }));
+};
+
+export const getChartColors = (count) => {
+  const baseColors = [
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+    "#96CEB4",
+    "#FFEAA7",
+    "#DDA0DD",
+    "#98D8C8",
+    "#F7DC6F",
+    "#BB8FCE",
+    "#85C1E9",
+  ];
+  const colors = [];
+  for (let i = 0; i < count; i++) {
+    colors.push(baseColors[i % baseColors.length]);
+  }
+  return colors;
+};
+
+// Error handling utilities
+export const getErrorMessage = (error) => {
+  if (typeof error === "string") return error;
+  if (error?.message) return error.message;
+  if (error?.error?.message) return error.error.message;
+  return "An unexpected error occurred";
+};
+
+export const isNetworkError = (error) => {
+  return !error.response && error.request;
+};
+
+export const isServerError = (error) => {
+  return error.response && error.response.status >= 500;
+};
+
+export const isClientError = (error) => {
+  return (
+    error.response &&
+    error.response.status >= 400 &&
+    error.response.status < 500
+  );
+};
+
+// Constants
+export const CONSTANTS = {
+  MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+  SUPPORTED_IMAGE_TYPES: ["image/jpeg", "image/png", "image/gif", "image/webp"],
+  SUPPORTED_DOCUMENT_TYPES: [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ],
+  PAGINATION_LIMIT: 20,
+  DEBOUNCE_DELAY: 300,
+  THROTTLE_DELAY: 1000,
+  SESSION_TIMEOUT: 30 * 60 * 1000, // 30 minutes
+};
+
+export default {
+  formatDate,
+  formatTime,
+  formatDateTime,
+  getRelativeTime,
+  truncateText,
+  capitalizeFirst,
+  capitalizeWords,
+  slugify,
+  formatNumber,
+  formatPercentage,
+  formatCurrency,
+  groupBy,
+  sortBy,
+  uniqueBy,
+  deepClone,
+  isEmpty,
+  pick,
+  omit,
+  isValidEmail,
+  isValidPhone,
+  isValidPassword,
+  isValidUrl,
+  storage,
+  debounce,
+  throttle,
+  getRandomColor,
+  hexToRgb,
+  formatFileSize,
+  getFileExtension,
+  getMoodEmoji,
+  getMoodColor,
+  getMealQualityColor,
+  generateChartData,
+  getChartColors,
+  getErrorMessage,
+  isNetworkError,
+  isServerError,
+  isClientError,
+  CONSTANTS,
 };
