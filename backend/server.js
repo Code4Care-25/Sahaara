@@ -12,6 +12,7 @@ const chatRoutes = require("./routes/chat");
 
 // Import middleware
 const { generalLimiter } = require("./middleware/rateLimiting");
+const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -1063,16 +1064,7 @@ app.get("/api/resources/search/advanced", (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    error: {
-      message: "Internal server error",
-      code: "SERVER_ERROR",
-    },
-  });
-});
+app.use(errorHandler);
 
 // 404 handler
 app.use("*", (req, res) => {
