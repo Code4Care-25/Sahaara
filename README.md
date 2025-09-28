@@ -1,6 +1,6 @@
 # Sahaara - Student Mental Health Platform
 
-**Smart India Hackathon 2024 | Team ID: 57115 | PS ID: 25092**
+**Smart India Hackathon 2025 | Team ID: 57115 | PS ID: 25092**
 
 ## 🎥 Prototype Demo
 [**Watch the Prototype Video**](https://youtu.be/SIeodL4W9zQ)
@@ -46,4 +46,4 @@ npm start
 
 ---
 
-**Built with ❤️ by Team Code4Care for Smart India Hackathon 2024**
+**Built with ❤️ by Team Code4Care for Smart India Hackathon 2025**
