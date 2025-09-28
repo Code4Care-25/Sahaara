@@ -3,21 +3,33 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows multiple null values
+    },
     email: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.userId; // Required only if userId is not provided (not anonymous)
+      },
       unique: true,
+      sparse: true, // Allows multiple null values
       lowercase: true,
       trim: true,
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.userId; // Required only if userId is not provided (not anonymous)
+      },
       minlength: 6,
     },
     name: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.userId; // Required only if userId is not provided (not anonymous)
+      },
       trim: true,
     },
     phone: {
@@ -26,15 +38,21 @@ const userSchema = new mongoose.Schema(
     },
     institution: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.userId; // Required only if userId is not provided (not anonymous)
+      },
     },
     department: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.userId; // Required only if userId is not provided (not anonymous)
+      },
     },
     academicYear: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.userId; // Required only if userId is not provided (not anonymous)
+      },
     },
     profilePicture: {
       type: String,
@@ -95,12 +113,13 @@ const userSchema = new mongoose.Schema(
 );
 
 // Index for better query performance
+userSchema.index({ userId: 1 });
 userSchema.index({ email: 1 });
 userSchema.index({ institution: 1, department: 1 });
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password") || !this.password) return next();
 
   try {
     const salt = await bcrypt.genSalt(12);
@@ -113,6 +132,7 @@ userSchema.pre("save", async function (next) {
 
 // Compare password method
 userSchema.methods.comparePassword = async function (candidatePassword) {
+  if (!this.password) return false; // Anonymous users don't have passwords
   return bcrypt.compare(candidatePassword, this.password);
 };
 
